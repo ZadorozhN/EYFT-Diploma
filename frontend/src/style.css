@@ -1,0 +1,149 @@
+div.categoriesList{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+div.categoriesList a{
+    min-width: 15%;
+}
+
+div.categoriesList button{
+    min-width: 15%;
+}
+
+div.categoriesList .categoryNameInput{
+    margin-left: 1%
+}
+
+
+
+
+
+.createCategoryFormContainer {
+    max-width: 75%;
+}
+
+.saveCancelCategoryButtons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.saveCategoryButton {
+    min-width: 40%;
+}
+
+.cancelCategoryButton {
+    min-width: 40% ;
+}
+
+
+
+
+
+div.adminConsole {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+ div.adminConsole div.card{
+     max-width: 40%;
+     min-width: 40%;
+     margin: 1% 0% 0% 0%;
+}
+
+div.adminConsole img {
+    height: 200px;
+    object-fit: cover;
+}
+
+img.events {
+
+    object-position: left 0%
+}
+
+div.adminConsole .card {
+    transition: 0.4s;
+}
+
+div.adminConsole .card:hover {
+    cursor: pointer;
+    background-color: lightgreen;
+}
+
+
+
+div.propsList{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+div.propsList a{
+    min-width: 15%;
+}
+
+div.propsList button{
+    min-width: 15%;
+}
+
+div.propsList .propNameInput{
+    margin-left: 1%
+}
+
+div.createPropCostAndTypes {
+    display: flex;
+    justify-content: space-between;
+}
+
+div.createPropCostAndTypes .form-group {
+    min-width: 30%;
+}
+
+div.createPropCostAndTypes .form-group .btn-group {
+    min-width: 100%;
+}
+
+
+.createPropFormContainer {
+    max-width: 75%;
+}
+
+.saveCancelPropButtons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.savePropButton {
+    min-width: 40%;
+}
+
+.cancelPropButton {
+    min-width: 40% ;
+}
+
+
+
+#waiter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100wh;
+    height: 80vh;
+}
+
+.image-cropper {
+    max-width: 100px;
+    height: 100px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+  
+  img.rounded {
+    display: inline;
+    margin: 0 auto;
+    height: 100%;
+    width: auto;
+  }
