@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Container, ButtonGroup, Table, Input, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
-import { Button,Card, CardGroup, Col, Row, Image} from 'react-bootstrap'
+import { Container, ButtonGroup, Table, Input, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { Button, Card, CardGroup, Col, Row, Image } from 'react-bootstrap'
 import classnames from 'classnames';
 
 import { Badge } from 'react-bootstrap';
@@ -10,6 +10,8 @@ import ErrorNotifier from '../Handler/ErrorNotifier';
 import $ from "jquery"
 import ErrorHandler from '../Handler/ErrorHandler';
 import ArrangedEventEdit from './ArrangedEventEdit';
+import InstantFormatter from '../Formatter/InstantFormatter';
+import Waiter from '../Waiter';
 
 const roleArranger = "ROLE_ARRANGER"
 const roleAdmin = "ROLE_ADMIN"
@@ -20,12 +22,13 @@ class ArrangedEventPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id : localStorage.getItem("id"),
+            id: localStorage.getItem("id"),
             event: null,
+            comments: [],
             isLoading: true,
             activeTab: '1'
         }
-        
+
         this.toggle = this.toggle.bind(this);
 
         this.startEvent = this.startEvent.bind(this);
@@ -52,140 +55,151 @@ class ArrangedEventPage extends Component {
             url: `/events/${thisObj.props.match.params.id}`,
             method: "GET",
             headers: {
-				"Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
-			},
-            success: function(data){
-                thisObj.setState({ event: data, isLoading: false });
+                "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
             },
-            error: function(data){
+            success: async function (data) {
+                thisObj.setState({ event: data });
+
+                const commentsResponse = await fetch(`/comments/event/${thisObj.props.match.params.id}`, {
+                    method: "GET",
+                    headers: new Headers({
+                        "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
+                    })
+                });
+
+                const commentsBody = await commentsResponse.json();
+                thisObj.setState({ comments: commentsBody.comments, isLoading: false });
+
+            },
+            error: function (data) {
                 ErrorHandler.runError(data)
             }
         })
     }
 
-	upload(event) {
-		let target = event.target
-        
-		const fileInput = document.querySelector("#eventImages" + target.getAttribute("eventId"));
-		const formData = new FormData();
+    upload(event) {
+        let target = event.target
 
-        for(let photo of fileInput.files){
+        const fileInput = document.querySelector("#eventImages" + target.getAttribute("eventId"));
+        const formData = new FormData();
+
+        for (let photo of fileInput.files) {
             formData.append('photos', photo);
         }
-	
-		fetch("/resources/events/" + target.getAttribute("eventId"), {
-			method: "POST",
-			body: formData,
-			headers: {
-				"Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
-			}
-		}).then(function(event){
+
+        fetch("/resources/events/" + target.getAttribute("eventId"), {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
+            }
+        }).then(function (event) {
             window.location.reload()
         })
-	}
+    }
 
-    startEvent(event){
+    startEvent(event) {
 
         $.ajax({
             url: "/events/" + event.target.getAttribute("eventId") + "/start",
-			method: "PUT",
+            method: "PUT",
             headers: {
-				"Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
-			},
-            success: function(data){
+                "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
+            },
+            success: function (data) {
                 window.location.reload()
             },
-            error: function(data){
+            error: function (data) {
                 ErrorHandler.runError(data)
             }
         })
     }
 
-    stopEvent(event){
+    stopEvent(event) {
 
         $.ajax({
             url: "/events/" + event.target.getAttribute("eventId") + "/stop",
-			method: "PUT",
+            method: "PUT",
             headers: {
-				"Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
-			},
-            success: function(data){
+                "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
+            },
+            success: function (data) {
                 window.location.reload()
             },
-            error: function(data){
+            error: function (data) {
                 ErrorHandler.runError(data)
             }
         })
 
     }
 
-    finishEvent(event){
+    finishEvent(event) {
 
 
         $.ajax({
             url: "/events/" + event.target.getAttribute("eventId") + "/finish",
-			method: "PUT",
+            method: "PUT",
             headers: {
-				"Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
-			},
-            success: function(data){
+                "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
+            },
+            success: function (data) {
                 window.location.reload()
             },
-            error: function(data){
+            error: function (data) {
                 ErrorHandler.runError(data)
             }
         })
     }
 
-    closeEvent(event){
+    closeEvent(event) {
         $.ajax({
             url: "/events/" + event.target.getAttribute("eventId") + "/close",
-			method: "PUT",
-			headers: {
-				"Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
-			},
-            success: function(data){
+            method: "PUT",
+            headers: {
+                "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
+            },
+            success: function (data) {
                 window.location.reload()
             },
-            error: function(data){
+            error: function (data) {
                 ErrorHandler.runError(data)
             }
         })
     }
 
-    setPreview(event){
+    setPreview(event) {
         let eventInDto = {
             id: event.target.getAttribute("photoId")
         }
 
         $.ajax({
             url: "/arranger/arranged/" + event.target.getAttribute("eventId") + "/preview",
-			method: "PUT",
+            method: "PUT",
             data: JSON.stringify(eventInDto),
             headers: {
                 "Content-Type": "application/json",
-				"Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
-			},
-            success: function(data){
+                "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
+            },
+            success: function (data) {
                 window.location.reload()
             },
-            error: function(data){
+            error: function (data) {
                 ErrorHandler.runError(data)
             }
         })
     }
 
-    removePhoto(event){
+    removePhoto(event) {
         $.ajax({
             url: `/arranger/arranged/${event.target.getAttribute("eventId")}/photos/${event.target.getAttribute("photoId")}`,
             method: "DELETE",
             headers: {
-				"Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
+                "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
             },
-            success: function(){
-                window.location.reload ();
+            success: function () {
+                window.location.reload();
             },
-            error: function(data){
+            error: function (data) {
                 ErrorHandler.runError(data)
             }
         })
@@ -193,132 +207,185 @@ class ArrangedEventPage extends Component {
 
     render() {
 
-        if(localStorage.getItem("login") == null 
-        || (localStorage.getItem("role") !== roleArranger && localStorage.getItem("role") !== roleAdmin) 
-        || localStorage.getItem("id") == null){
-            return <ErrorNotifier/>
+        if (localStorage.getItem("login") == null
+            || (localStorage.getItem("role") !== roleArranger && localStorage.getItem("role") !== roleAdmin)
+            || localStorage.getItem("id") == null) {
+            return <ErrorNotifier />
         }
-        
+
         const { event, isLoading } = this.state;
 
-		if (isLoading) {
-			return <p>Loading...</p>;
-		}
-        
+        if (isLoading) {
+            return <Waiter />;
+        }
+
         var startInstant = new Date(event.startInstant * 1000);
-        startInstant.toLocaleString('en-GB', { hour12:false } )
-    
+        startInstant.toLocaleString('en-GB', { hour12: false })
+
         var endInstant = new Date(event.endInstant * 1000);
-        endInstant.toLocaleString('en-GB', { hour12:false } )
-        
+        endInstant.toLocaleString('en-GB', { hour12: false })
+
         var categories = event.categoriesNames.map(category => {
-            return <Badge className="bg bg-info m-1">{category}</Badge>
+            return <Badge className="bg bg-success me-1" style={{ minWidth: "24%" }}>{category}</Badge>
         })
 
         let photosLength = event.photos.length
         let photoSrc = ""
-        if(photosLength > 0){
+        if (photosLength > 0) {
             photoSrc = "/resources/events/" + event.id + "/photos/" + event.photos[0].id;
         }
 
-		const photosList = event.photos.map(photo => {
-            return <Card > 
-                        <Card.Img src={"/resources/events/" + event.id + "/photos/" + photo.id}/>
-                        <Button onClick={this.setPreview} eventId={event.id} photoId={photo.id} className="mt-1" variant="success">Set as preview</Button>
-                        <Button onClick={this.removePhoto} eventId={event.id} photoId={photo.id} className="mt-1" variant="danger">Remove</Button>
-                    </Card>
+        const photosList = event.photos.map(photo => {
+            return <Card border="light">
+                <Card.Img src={"/resources/events/" + event.id + "/photos/" + photo.id} />
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    {this.state.event.preview.id == photo.id ? <span className='mt-3 border-bottom border-success' style={{ minWidth: "79%" }}>Current Preview</span> :
+                        <Button onClick={this.setPreview} eventId={event.id} photoId={photo.id} variant="outline-success" className="mt-1" style={{ minWidth: "79%" }}>Set as preview</Button>
+                    }
+                    <Button onClick={this.removePhoto} eventId={event.id} photoId={photo.id} variant="outline-danger" className="mt-1" style={{ minWidth: "20%" }}>❌</Button>
+                </div>
+            </Card>
         })
 
         let eventAction = ""
-        if(event.eventState == "WAITING_FOR_START"){
-            eventAction = 
-            <div className="d-grid gap-2 mt-2">
-                <Button variant="success" onClick={this.startEvent} eventId={event.id}>Start</Button>
-                <Button variant="secondary" onClick={this.closeEvent} eventId={event.id}>Close</Button>
-            </div>
-        } else if(event.eventState == "STARTED"){
-            eventAction = 
-            <div className="d-grid gap-2 mt-2">
-                <Button variant="warning" onClick={this.stopEvent} eventId={event.id}>Roll back</Button>
-                <Button variant="danger" onClick={this.finishEvent} eventId={event.id}>Finish</Button>
-                <Button variant="secondary" onClick={this.closeEvent} eventId={event.id}>Close</Button>
-            </div>
-        } else if(event.eventState == "FINISHED"){
-            eventAction = 
-            <div className="d-grid gap-2 mt-2">
-                <Button variant="secondary" onClick={this.closeEvent} eventId={event.id}>Close</Button>
-            </div>
+        if (event.eventState == "WAITING_FOR_START") {
+            eventAction =
+                <div className="d-grid gap-2 mt-2">
+                    <Button variant="success" onClick={this.startEvent} eventId={event.id}>Start</Button>
+                    <Button variant="dark" onClick={this.closeEvent} eventId={event.id}>Close</Button>
+                </div>
+        } else if (event.eventState == "STARTED") {
+            eventAction =
+                <div className="d-grid gap-2 mt-2">
+                    <Button variant="warning" onClick={this.stopEvent} eventId={event.id}>Roll back</Button>
+                    <Button variant="danger" onClick={this.finishEvent} eventId={event.id}>Finish</Button>
+                    <Button variant="dark" onClick={this.closeEvent} eventId={event.id}>Close</Button>
+                </div>
+        } else if (event.eventState == "FINISHED") {
+            eventAction =
+                <div className="d-grid gap-2 mt-2">
+                    <Button variant="dark" onClick={this.closeEvent} eventId={event.id}>Close</Button>
+                </div>
         }
 
-        const preview = event.preview !== null ? <Card > 
-                                                    <Card.Img src={"/resources/events/" + event.id + "/photos/" + event.preview.id}/>
-                                                </Card> 
-                                                : ""
+        const preview = event.preview !== null ? <Card >
+            <Card.Img src={"/resources/events/" + event.id + "/photos/" + event.preview.id} />
+        </Card>
+            : ""
 
-        
 
-        return  <div>
-                    <AppNavbar/>
-                    <Container fluid>
-                    <Row>
-                        <Col xs="4">
-                            {preview}
-                            <div>Title: {event.name}</div>
-                            <div>Description: {event.description}</div>
-                            <div>Categories: {categories}</div>
-                            <div>Place: {event.place}</div>
-                            <div>
-                                Starts at {startInstant.toLocaleString('en-GB', { hour12:false })}
-                            </div>
-                            <div>
-                                Finishes at {endInstant.toLocaleString('en-GB', { hour12:false })}
-                            </div>
-                            <div>
-                                <Input variant="primary" type="file" name="image" id={"eventImages" + event.id} multiple/>
-                                <Button onClick={this.upload} eventId={event.id} variant="success">Upload</Button>
-                            </div>
-                            <div>
-                                Current state: {event.eventState}
-                            </div>
-                            {eventAction}
-                        </Col>
-                        
-                        <Col xs ="8">
+        var state
+        switch (event.eventState) {
+            case "WAITING_FOR_START":
+                state = <Badge className="bg-warning" style={{ minWidth: "100%" }}>Waiting</Badge>
+                break;
+            case "STARTED":
+                state = <Badge className="bg-success" style={{ minWidth: "100%" }}>Started</Badge>
+                break;
+            case "FINISHED":
+                state = <Badge className="bg-danger" style={{ minWidth: "100%" }}>Finished</Badge>
+                break;
+            case "CLOSED":
+                state = <Badge className="bg-dark" style={{ minWidth: "100%" }}>Closed</Badge>
+                break;
+        }
+
+        const comments = this.state.comments.map(comment => {
+            return <div class="border-bottom p-2">
+                <div>
+                    <span class="text-secondary me-1">{comment.user.login} at</span>
+                    <span class="text-secondary">{InstantFormatter.formatInstant(comment.creationTime)}</span>
+                </div>
+                <div>
+                    {comment.text}
+                </div>
+            </div>
+        })
+
+
+        return <div>
+            <AppNavbar />
+            <Container fluid>
+                <Row>
+                    <Col xs="4">
+                        {preview}
+                        <hr class="solid" />
+                        <h2 className='text-center'>{event.name}</h2>
+                        <hr class="solid" />
+                        <div>{event.description}</div>
+                        <div>{categories}</div>
+                        <div>Nearby {event.place}</div>
                         <div>
-                                <Nav tabs>
-                                    <NavItem>
-                                        <NavLink
-                                            className={classnames({ active: this.state.activeTab === '1' })}
-                                            onClick={() => { this.toggle('1'); }}
-                                        >
-                                            Photos
-                                        </NavLink>
-                                    </NavItem>
+                            Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
+                        </div>
+                        <div>
+                            Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
+                        </div>
+                        <div>
+                            {state}
+                        </div>
+
+                        {this.state.event.eventState != "CLOSED" ?
+                            <div><hr class="solid" />
+                                <h5 className='text-center'>Actions</h5>
+                                <hr class="solid" />
+                                {eventAction}
+                            </div> : ""}
+                    </Col>
+                    <Col xs="8">
+                        <div>
+                            <Nav tabs>
+                                <NavItem>
+                                    <NavLink
+                                        className={classnames({ active: this.state.activeTab === '1' })}
+                                        onClick={() => { this.toggle('1'); }}
+                                    >
+                                        Photos 📷
+                                    </NavLink>
+                                </NavItem>
+                                {event.eventState == "WAITING_FOR_START" || event.eventState == "STARTED" ?
                                     <NavItem>
                                         <NavLink
                                             className={classnames({ active: this.state.activeTab === '2' })}
                                             onClick={() => { this.toggle('2'); }}
                                         >
-                                            Edit
+                                            Edit ✏️
                                         </NavLink>
-                                    </NavItem>
-                                </Nav>
-                                <TabContent activeTab={this.state.activeTab}>
-                                    <TabPane tabId="1">
-                                        <Row xs={1} md={3} className="g-4">
-                                            {photosList}
-                                        </Row>
-                                    </TabPane>
-                                    <TabPane tabId="2">
-                                        <ArrangedEventEdit/>
-                                    </TabPane>
-                                </TabContent>
-                            </div>
-                        </Col>
-                    </Row>
-                    </Container>
-                    <ErrorNotifier/>
-                </div>
+                                    </NavItem> : ""}
+                                <NavItem>
+                                    <NavLink
+                                        className={classnames({ active: this.state.activeTab === '3' })}
+                                        onClick={() => { this.toggle('3'); }}
+                                    >
+                                        Comments 💬
+                                    </NavLink>
+                                </NavItem>
+                            </Nav>
+                            <TabContent activeTab={this.state.activeTab}>
+                                <TabPane tabId="1">
+                                    <div className='my-2'>
+                                        <Input variant="primary" type="file" name="image" id={"eventImages" + event.id} multiple />
+                                        <Button onClick={this.upload} eventId={event.id} variant="success">Upload</Button>
+                                    </div>
+                                    <Row xs={1} md={3} className="g-4">
+                                        {photosList}
+                                    </Row>
+                                </TabPane>
+                                <TabPane tabId="2">
+                                    <ArrangedEventEdit />
+                                </TabPane>
+                                <TabPane tabId="3">
+                                    <div class="messagesScroller" >
+                                        {comments}
+                                    </div>
+                                </TabPane>
+                            </TabContent>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+            <ErrorNotifier />
+        </div>
     }
 }
 

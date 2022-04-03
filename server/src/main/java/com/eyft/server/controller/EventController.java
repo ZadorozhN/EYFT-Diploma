@@ -41,24 +41,6 @@ public class EventController {
     private final MessageService messageService;
     private final CommentService commentService ;
 
-//    @Deprecated
-//    @PostMapping("/arrange")
-//    public SuccessfulOutDTO createEvent(@RequestBody EventCreatingInDTO eventCreatingInDTO,
-//                                        @RequestHeader(name="Authorization") String token) {
-//        User user = tokenHandler.getUser(token);
-//
-//        Event event = new Event();
-//        eventMapper.fillFromInDTO(event, eventCreatingInDTO);
-//        eventUtil.checkNewEvent(event);
-//
-//        event.setUser(user);
-//
-//        TODO should i add to user.getCreatedEvents
-//        eventService.save(event);
-//
-//        return new SuccessfulOutDTO("Event was created");
-//    }
-
     @GetMapping("/{id}")
     public EventOutDTO getEvent(@PathVariable Long id) {
         Event event = eventService.findById(id).orElseThrow(EventDoesNotExistException::new);
@@ -88,9 +70,8 @@ public class EventController {
         User user = tokenHandler.getUser(token);
 
         if(eventUtil.isRelevant(event)) {
-            user.getEvents().add(event);
-            userService.save(user);
-            return new SuccessfulOutDTO("User joined event");
+            userService.joinEvent(user, event);
+            return new SuccessfulOutDTO("Joined event");
         }
 
         throw new EventHasBeenFinishedException();
@@ -103,10 +84,8 @@ public class EventController {
         User user = tokenHandler.getUser(token);
 
         if(eventUtil.isRelevant(event)) {
-            user.getEvents().remove(event);
-            userService.save(user);
-
-            return new SuccessfulOutDTO("User left event");
+            userService.leaveEvent(user, event);
+            return new SuccessfulOutDTO("Left event");
         }
 
         throw new EventHasBeenFinishedException();

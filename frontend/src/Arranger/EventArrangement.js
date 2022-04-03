@@ -93,6 +93,7 @@ class EventArrangement extends React.Component {
             place: this.state.event.place,
             startInstant: this.state.event.startInstant,
             endInstant: this.state.event.endInstant,
+            price: this.state.event.price,
             categoriesNames: this.state.event.categoriesNames.map(function (el) {
                 return el.trim();
             }).filter(function (el) {
@@ -175,6 +176,11 @@ class EventArrangement extends React.Component {
                         <Input type="text" name="place" id="place" value={event.place || ''}
                             onChange={this.handleChange} autoComplete="place" />
                     </FormGroup>
+                    <FormGroup className="mt-3">
+                        <Label for="price">Price in Cents</Label>
+                        <Input type="number" name="price" id="price" value={event.price || ''}
+                            onChange={this.handleChange} autoComplete="price" />
+                    </FormGroup>
                     <Row>
                         <Col md="8">
                             <FormGroup className="mt-3">
@@ -219,7 +225,7 @@ class EventArrangement extends React.Component {
 
                     <FormGroup className="mt-3" style={{minWidth:"100%", display:"flex", justifyContent:"space-between"}}>
                         <Button color="success" type="submit" style={{minWidth:"48%"}}>Save</Button>{' '}
-                        <Button color="secondary" tag={Link} to="/" style={{minWidth:"48%"}}>Cancel</Button>
+                        <Button color="secondary" tag={Link} to="/arranger" style={{minWidth:"48%"}}>Cancel</Button>
                     </FormGroup>
                 </Form>
 

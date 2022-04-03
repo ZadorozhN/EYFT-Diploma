@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { Component } from 'react';
+import { Link, withRouter } from 'react-router-dom';
 
 import { Container, Alert, Input, Label } from 'reactstrap';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
@@ -61,8 +62,8 @@ class MessengerCore extends React.Component {
             </div>
                 : false
             return <li class="nav-item m-1">
-                <button style={{minWidth:"100%", display:"flex", alignItems:"center", flexDirection:"column"}}
-                class={receiver.login == this.state.currentReceiver ? "btn btn-success" : "btn btn-outline-success"} onClick={() => this.pickDialog(receiver.login)}>{avatar}{receiver.login}</button>
+                <button style={{ minWidth: "100%", display: "flex", alignItems: "center", flexDirection: "column" }}
+                    class={receiver.login == this.state.currentReceiver ? "btn btn-success" : "btn btn-outline-success"} onClick={() => this.pickDialog(receiver.login)}>{avatar}{receiver.login}</button>
             </li>
         });
 
@@ -78,41 +79,25 @@ class MessengerCore extends React.Component {
                     </div>
                 </Col>
                 <Col className='border p-3 ms-3'>
-                    <div className=''>{this.state.currentReceiver}</div>
+                    <h3><Link className="text-success" to={`/guest/${this.state.currentReceiver}`}>{this.state.currentReceiver}</Link></h3>
                     <div class="messagesScroller border" >
                         <ul class="nav flex-column">
                             {this.state.currentMessagesControls}
                         </ul>
                     </div>
                     <div class="input-group">
-                        <input type="text" class="form-control" name="messageText" value={this.state.messageText} onChange={this.handleChange} />
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-success" onClick={this.sendMessage}>Send</button>
+                        <input type="text" class="form-control" name="messageText" value={this.state.messageText} onChange={this.handleChange}
+                            onKeyPress={event => {
+                                if (event.key === 'Enter') {
+                                    this.sendMessage()
+                                }
+                            }} />
+                        <div class="input-group-append" style={{minWidth:"20%"}}>
+                            <button type="button" class="btn btn-outline-success" style={{minWidth:"100%"}} onClick={this.sendMessage}>Send</button>
                         </div>
                     </div>
                 </Col>
             </Row>
-            {/* <Row>
-                <Col xs="2">
-                    <ul class="nav flex-column">
-                        {this.state.receiversControls}
-                    </ul>
-                </Col>
-
-                <Col xs="8">
-                    <div class="messagesScroller" id="DAS">
-                        <ul class="nav flex-column">
-                            {this.state.currentMessagesControls}
-                        </ul>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="messageText" value={this.state.messageText} onChange={this.handleChange} />
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary" onClick={this.sendMessage}>Send</button>
-                        </div>
-                    </div>
-                </Col>
-            </Row> */}
         </Container >
     }
 
@@ -209,23 +194,33 @@ class MessengerCore extends React.Component {
                     || message.sender.login == anotherUserLogin && message.receiver.login == localStorage.getItem("login"))
 
             })
-            .sort((a, b) => b.creationTime - a.creationTime)
+            .sort((a, b) => a.creationTime - b.creationTime)
             .map(message => {
                 let creationTime = new Date(message.creationTime * 1000);
+
 
                 return <li class="nav-item mt-1">
                     {message.receiver.login == anotherUserLogin
                         ?
-                        <div>
-                            <span class="ms-2 badge bg-dark">{creationTime.toLocaleString()}</span>
-                            <span class="m-3">{message.text}</span>
+                        <div class="border-bottom p-2" style={{ display: "flex", justifyContent: "right" }}>
+                            <div>
+                                <div class="text-secondary" style={{ display: "flex", justifyContent: "right" }}>
+                                    <span>{creationTime.toLocaleString()}</span>
+                                </div>
+                                <div>
+                                    <span >{message.text}</span>
+                                </div>
+                            </div>
                         </div>
                         :
-                        <div>
-                            <span class="ms-2 badge bg-success">{creationTime.toLocaleString()}</span>
-                            <span class="m-3">{message.text}</span>
+                        <div class="border-bottom p-2" style={{ display: "flex", justifyContent: "left" }}>
+                            <div>
+                                <span class="text-secondary">{creationTime.toLocaleString()}</span>
+                                <div>
+                                    <span >{message.text}</span>
+                                </div>
+                            </div>
                         </div>
-
                     }
                 </li>
             });
@@ -234,8 +229,10 @@ class MessengerCore extends React.Component {
         this.setState({
             currentMessagesControls: currentMessagesControls,
             currentReceiver: anotherUserLogin,
+        }, () => {
+            let scroller = document.getElementsByClassName("messagesScroller")[0];
+            scroller.scrollTop = scroller.scrollHeight;
         })
-
     }
 
     handleChange(event) {

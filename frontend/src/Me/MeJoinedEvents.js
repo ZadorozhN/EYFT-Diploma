@@ -93,7 +93,7 @@ class MeJoinedEvents extends Component {
             endInstant.toLocaleString('en-GB', { hour12: false })
 
             var categories = event.categoriesNames.map(category => {
-                return <Badge>{category}</Badge>
+                return <Badge className="bg-success me-1" style={{ minWidth: "23%" }}>{category}</Badge>
             })
 
             let photosLength = event.photos.length
@@ -118,20 +118,28 @@ class MeJoinedEvents extends Component {
             }
 
             return <Col>
-                <Card>
-                    {eventState}
-                    <Card.Img variant="top" src={photoSrc} className="mt-0"/>
-                    <Card.Body>
-                        <Card.Title>{event.name}</Card.Title>
-                        <Card.Text>{event.description}</Card.Text>
-                        <div>
-                            Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
-                        </div>
-                        <Link to={"/events/" + event.id}>more</Link>
-                    </Card.Body>
-                    <Button color="warning" onClick={() => this.leave(event.id)}>Leave</Button>
-                </Card>
-            </Col>
+            <Card>
+                {eventState}
+                <Card.Img variant="top" src={photoSrc} />
+                <Card.Body>
+                    <Card.Title>{event.name}</Card.Title>
+                    <Card.Text>{event.description}</Card.Text>
+                    <div className='mb-3'>
+                        {categories}
+                    </div>
+                    <Link to={"/arranger/arranged/" + event.id}>View more</Link>
+                    <Button color="outline-warning" onClick={() => this.leave(event.id)} className="mt-3" style={{minWidth:"100%"}}>Leave</Button>
+                </Card.Body>
+                <Card.Footer className="text-muted">
+                    <div>
+                        Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
+                    </div>
+                    <div>
+                        Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
+                    </div>
+                </Card.Footer>
+            </Card>
+        </Col>
         });
 
         return (<div>

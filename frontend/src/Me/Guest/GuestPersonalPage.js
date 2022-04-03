@@ -14,13 +14,15 @@ import GuestMePhotos from './GuestMePhotos';
 import GuestMeArrangedEvents from './GuestMeArrangedEvents';
 import classnames from 'classnames';
 import Constants from '../../Const/Constants';
-
+import ErrorHandler from '../../Handler/ErrorHandler';
+import $ from 'jquery';
 class GuestPersonalPage extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            activeTab: '1'
+            activeTab: '1',
+            user: null
         };
         this.toggle = this.toggle.bind(this);
     }
@@ -35,11 +37,6 @@ class GuestPersonalPage extends Component {
 
     render() {
 
-        // if(localStorage.getItem("login") == null 
-        // || !Constants.isAnyRole((localStorage.getItem("role"))) 
-        // || localStorage.getItem("id") == null){
-        //     return <ErrorNotifier/>
-        // }
 
         return (
             <div>
@@ -47,45 +44,43 @@ class GuestPersonalPage extends Component {
                 <Container fluid>
                     <Row>
                         <Col xs="4">
-                            <GuestMePage />
+                            <GuestMePage setUser={(data) => {
+                                this.setState({ user: data }, () => {
+                                    if (this.state.user == null || !Constants.isArrangerOrHigher("ROLE_" + this.state.user.role)) {
+                                        this.toggle('2')
+                                    }
+                                })
+                            }
+                            } />
                         </Col>
 
                         <Col xs="8">
                             <div>
                                 <Nav tabs>
-                                    <NavItem>
-                                        <NavLink
-                                            className={classnames({ active: this.state.activeTab === '1' })}
-                                            onClick={() => { this.toggle('1'); }}
-                                        >
-                                            Joined Events
-                                        </NavLink>
-                                    </NavItem>
+                                    {this.state.user != null && Constants.isArrangerOrHigher("ROLE_" + this.state.user.role)? 
+                                        <NavItem>
+                                            <NavLink
+                                                className={classnames({ active: this.state.activeTab === '1' })}
+                                                onClick={() => { this.toggle('1'); }}
+                                            >
+                                                Arranged Events 🎉
+                                            </NavLink>
+                                        </NavItem> : ""}
                                     <NavItem>
                                         <NavLink
                                             className={classnames({ active: this.state.activeTab === '2' })}
                                             onClick={() => { this.toggle('2'); }}
                                         >
-                                            Arranged Events
-                                        </NavLink>
-                                    </NavItem>
-                                    <NavItem>
-                                        <NavLink
-                                            className={classnames({ active: this.state.activeTab === '3' })}
-                                            onClick={() => { this.toggle('3'); }}
-                                        >
-                                            Photos
+                                            Photos 📷
                                         </NavLink>
                                     </NavItem>
                                 </Nav>
                                 <TabContent activeTab={this.state.activeTab}>
-                                    <TabPane tabId="1">
-                                        <GuestMeJoinedEvents />
-                                    </TabPane>
+                                    {this.state.user != null && Constants.isArrangerOrHigher("ROLE_" + this.state.user.role) ?
+                                        <TabPane tabId="1">
+                                            <GuestMeArrangedEvents />
+                                        </TabPane> : ""}
                                     <TabPane tabId="2">
-                                        <GuestMeArrangedEvents />
-                                    </TabPane>
-                                    <TabPane tabId="3">
                                         <GuestMePhotos />
                                     </TabPane>
                                 </TabContent>
@@ -97,6 +92,7 @@ class GuestPersonalPage extends Component {
             </div>
         );
     }
+
 }
 
 export default GuestPersonalPage;

@@ -381,7 +381,7 @@ class EventList extends Component {
 			var state
 			switch (event.eventState) {
 				case "WAITING_FOR_START":
-					state = <Badge className="bg-warning" style={{ minWidth: "100%" }}>Waiting</Badge>
+					state = <Badge className="bg-warning text-dark" style={{ minWidth: "100%" }}>Waiting</Badge>
 					break;
 				case "STARTED":
 					state = <Badge className="bg-success" style={{ minWidth: "100%" }}>Started</Badge>

@@ -6,6 +6,7 @@ import $ from 'jquery';
 import ErrorHandler from '../../Handler/ErrorHandler';
 import ErrorNotifier from '../../Handler/ErrorNotifier';
 import Constants from '../../Const/Constants';
+import Waiter from '../../Waiter';
 
 const address = ""
 
@@ -15,9 +16,6 @@ class GuestMePhotos extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            login : localStorage.getItem("login"),
-            id : localStorage.getItem("id"),
-            role : localStorage.getItem("role"),
             user: null,
             isLoading: true,
             }
@@ -45,23 +43,11 @@ class GuestMePhotos extends Component {
 
     render() {
 
-        // if(localStorage.getItem("login") == null 
-        // || !Constants.isAnyRole((localStorage.getItem("role"))) 
-        // || localStorage.getItem("id") == null){
-        //     return <ErrorNotifier/>
-        // }
-
 		const { user, isLoading } = this.state;
 
 		if (isLoading) {
-			return <p>Loading...</p>;
+			return <p>Loading ...</p>;
 		}
-
-        // if(this.state.login == null || this.state.role == null || this.state.id == null){
-            // return <div><h1>Unauthorized</h1></div>
-        // }
-
-        console.log(this.state.user)
 
 		const photosList = this.state.user.photos.map(photo => {
             return <Card border="light"> 

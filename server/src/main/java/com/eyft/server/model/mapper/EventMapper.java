@@ -36,7 +36,8 @@ public class EventMapper {
                 event.getCategories().stream().map(Category::getName).collect(Collectors.toList()),
                 event.getStartInstant(),
                 event.getEndInstant(),
-                event.getEventState()
+                event.getEventState(),
+                event.getPrice()
         );
     }
 
@@ -52,7 +53,8 @@ public class EventMapper {
                 event.getEndInstant(),
                 event.getEventState(),
                 event.getPhotos().stream().map(photoMapper::fillPhotoOutDTO).collect(Collectors.toList()),
-                event.getPreview() != null ? photoMapper.fillPhotoOutDTO(event.getPreview()) : null
+                event.getPreview() != null ? photoMapper.fillPhotoOutDTO(event.getPreview()) : null,
+                event.getPrice()
         );
     }
 
@@ -96,6 +98,10 @@ public class EventMapper {
 
             event.setCategories(categories);
         }
+
+        if(eventManagementEventChangingInDTO.getPrice() != null){
+            event.setPrice(eventManagementEventChangingInDTO.getPrice());
+        }
     }
 
     public void fillFromInDTO(Event event, ChangeEventInDto changeEventInDto){
@@ -128,6 +134,10 @@ public class EventMapper {
 
             event.setCategories(categories);
         }
+
+        if(changeEventInDto.getPrice() != null){
+            event.setPrice(changeEventInDto.getPrice());
+        }
     }
 
     public void fillFromInDTO(Event event, EventCreatingInDTO eventCreatingInDTO){
@@ -159,6 +169,10 @@ public class EventMapper {
                     .collect(Collectors.toList());
 
             event.setCategories(categories);
+        }
+
+        if(eventCreatingInDTO.getPrice() != null){
+            event.setPrice(eventCreatingInDTO.getPrice());
         }
     }
 }

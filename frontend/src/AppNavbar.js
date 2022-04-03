@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import { Alert, Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Button, Navbar, Container, Nav, Form, NavDropdown, FormControl } from 'react-bootstrap'
 
 import { Link } from 'react-router-dom';
@@ -8,6 +7,9 @@ import ErrorHandler from './Handler/ErrorHandler';
 import axios from 'axios';
 import MoneyFormatter from './Formatter/MoneyFormatter';
 import Constants from './Const/Constants'
+
+var Stomp = require('stompjs');
+var SockJS = require("sockjs-client");
 
 const roleUser = "ROLE_USER"
 const roleAdmin = "ROLE_ADMIN"
@@ -54,67 +56,9 @@ class AppNavbar extends Component {
     render() {
         let navItems;
 
-        // if (localStorage.getItem("role") === roleAdmin) {
-        //     navItems = <Nav className="ml-auto" navbar>
-        //         <NavItem>
-        //             <NavLink href="/me">Me</NavLink>
-        //         </NavItem>
-        //         <NavItem>
-        //             <NavLink href="/arranger">Arranger Console</NavLink>
-        //         </NavItem>
-        //         <NavItem>
-        //             <NavLink href="/admin">Admin Console</NavLink>
-        //         </NavItem>
-        //         <NavItem>
-        //             <NavLink onClick={this.logout} href="/auth">Log Out</NavLink>
-        //         </NavItem>
-
-        //     </Nav>
-        // } else if (localStorage.getItem("role") === roleUser) {
-        //     navItems = <Nav className="ml-auto" navbar>
-        //         <NavItem>
-        //             <NavLink href="/me">Me</NavLink>
-        //         </NavItem>
-        //         <NavItem>
-        //             <NavLink onClick={this.logout} href="/auth">Log Out</NavLink>
-        //         </NavItem>
-        //     </Nav>
-        // } else if (localStorage.getItem("role") === roleArranger) {
-        //     navItems = <Nav className="ml-auto" navbar>
-        //         <NavItem>
-        //             <NavLink href="/me">Me</NavLink>
-        //         </NavItem>
-        //         <NavItem>
-        //             <NavLink href="/arranger">Arranger Console</NavLink>
-        //         </NavItem>
-        //         <NavItem>
-        //             <NavLink onClick={this.logout} href="/auth">Log Out</NavLink>
-        //         </NavItem>
-        //     </Nav>
-        // } else {
-        //     navItems = <Nav className="ml-auto" navbar>
-        //         <NavItem>
-        //             <NavLink href="/auth">Login</NavLink>
-        //         </NavItem>
-        //         <NavItem>
-        //             <NavLink href="/registration">Registration</NavLink>
-        //         </NavItem>
-        //     </Nav>
-        // }
-
-
-        // return <div class="bg bg-dark px-3">
-        //     <Navbar color="dark" dark expand="md" >
-        //         <NavbarBrand tag={Link} to="/" className="mr-auto">Home</NavbarBrand>
-        //         <NavbarToggler onClick={this.toggle} />
-        //         <Collapse isOpen={this.state.isOpen} navbar>
-        //             {navItems}
-        //         </Collapse>
         <h4>
             <span class="badge bg-success">{MoneyFormatter.fromatDollars(this.state.cents)}</span>
         </h4>
-        //     </Navbar>
-        // </div>
 
         let nav;
         if (this.state.fastMode) {
@@ -180,22 +124,14 @@ class AppNavbar extends Component {
                 <Navbar.Collapse id="navbarScroll">
                     {nav}
                     {localStorage.getItem("role") != null ? <h4>
-                        <span class="badge bg-success">{MoneyFormatter.fromatDollars(this.state.cents)}</span>
+                        <a href='/card'>
+                            <span class="badge bg-success">{MoneyFormatter.fromatDollars(this.state.cents)}</span>
+                        </a>
                     </h4> : ""}
                     <Button variant={this.state.fastMode ? "success" : "outline-success"}
                         className="mx-3" onClick={this.toggleFastMode}>
                         Fast Mode
                     </Button>
-
-                    {/* <Form className="d-flex">
-              <FormControl
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
-              />
-              <Button variant="outline-success">Search</Button>
-            </Form> */}
                 </Navbar.Collapse>
             </Container>
         </Navbar>
@@ -220,6 +156,23 @@ class AppNavbar extends Component {
             }).catch((err) => {
                 ErrorHandler.runStringMessage("Can't receive balance")
             })
+        }
+
+        if (localStorage.getItem("accessToken")) {
+            var socket = new SockJS('/ws/messages');
+            let stompWebsocket = Stomp.over(socket);
+            this.websocket = stompWebsocket;
+
+            let thisObj = this;
+
+            this.websocket.connect({ "X-Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken") }, function (frame) {
+                stompWebsocket.subscribe('/topic/users/' + localStorage.getItem("id") + "/balance", function (data) {
+
+                    let balance = JSON.parse(data.body)
+                    localStorage.setItem("cents", balance.cents)
+                    thisObj.setState({ cents: balance.cents })
+                });
+            });
         }
     }
 }

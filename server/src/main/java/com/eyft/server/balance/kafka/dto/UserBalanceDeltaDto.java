@@ -9,7 +9,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class BalanceDto {
-    private String accountId;
+public class UserBalanceDeltaDto {
+    private String login;
     private Long delta;
 }

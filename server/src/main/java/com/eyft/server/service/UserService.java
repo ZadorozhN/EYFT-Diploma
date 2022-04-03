@@ -1,5 +1,6 @@
 package com.eyft.server.service;
 
+import com.eyft.server.model.Event;
 import com.eyft.server.model.Photo;
 import com.eyft.server.model.Role;
 import com.eyft.server.model.User;
@@ -30,4 +31,8 @@ public interface UserService {
     void setPassword(User user, String password);
 
     String recoverPassword(User user);
+
+    void joinEvent(User user, Event event);
+
+    void leaveEvent(User user, Event event);
 }

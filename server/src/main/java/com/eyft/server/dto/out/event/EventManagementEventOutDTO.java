@@ -21,4 +21,5 @@ public class EventManagementEventOutDTO {
     private Instant startInstant;
     private Instant endInstant;
     private EventState eventState;
+    private Long price;
 }

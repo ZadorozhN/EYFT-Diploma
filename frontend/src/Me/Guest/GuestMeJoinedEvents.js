@@ -62,12 +62,6 @@ class GuestMeJoinedEvents extends Component {
 
     render() {
 
-        // if(localStorage.getItem("login") == null 
-        // || !Constants.isAnyRole((localStorage.getItem("role"))) 
-        // || localStorage.getItem("id") == null){
-        //     return <ErrorNotifier/>
-        // }
-
         const eventList = this.state.events.map(event => {
 
             var startInstant = new Date(event.startInstant * 1000);

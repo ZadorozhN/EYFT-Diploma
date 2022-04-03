@@ -3,6 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, ButtonGroup, Table, Input, InputGroup } from 'reactstrap';
 import { Card, CardGroup, Col, Row, Image } from 'react-bootstrap'
 import $ from 'jquery'
+import css from './style.css'
 
 import Badge from 'react-bootstrap/Badge';
 import AppNavbar from './AppNavbar';
@@ -21,13 +22,19 @@ class EventPage extends Component {
             event: null,
             isLoading: true,
             comments: [],
-            commentText: ""
+            commentText: "",
+            commentsEnabled: false
         }
 
         thisObj = this;
 
         this.leaveComment = this.leaveComment.bind(this);
         this.changeCommentText = this.changeCommentText.bind(this);
+        this.toggleComments = this.toggleComments.bind(this);
+    }
+
+    toggleComments() {
+        this.setState({ commentsEnabled: !this.state.commentsEnabled })
     }
 
     async componentDidMount() {
@@ -95,13 +102,6 @@ class EventPage extends Component {
 
     render() {
 
-        //TODO fix anonim
-        // if(localStorage.getItem("login") == null 
-        // || !Constants.isAnyRole((localStorage.getItem("role"))) 
-        // || localStorage.getItem("id") == null){
-        // return <ErrorNotifier/>
-        // }
-
         const { event, isLoading } = this.state;
 
         if (isLoading) {
@@ -115,7 +115,7 @@ class EventPage extends Component {
         endInstant.toLocaleString('en-GB', { hour12: false })
 
         var categories = event.categoriesNames.map(category => {
-            return <Badge className="bg bg-info m-1">{category}</Badge>
+            return <Badge className="bg bg-success me-1" style={{ minWidth: "24%" }}>{category}</Badge>
         })
 
         let photosLength = event.photos.length
@@ -125,7 +125,7 @@ class EventPage extends Component {
         }
 
         const photosList = event.photos.map(photo => {
-            return <Card >
+            return <Card border="light">
                 <Card.Img src={"/resources/events/" + event.id + "/photos/" + photo.id} />
             </Card>
         })
@@ -137,26 +137,56 @@ class EventPage extends Component {
 
         let arranger = ""
         if (event.userLogin !== null) {
-            arranger = <div>Arranger: <Link to={`/guest/${event.userLogin}`}>{event.userLogin}</Link></div>
+            arranger = <Link to={`/guest/${event.userLogin}`}>{event.userLogin}</Link>
         } else {
-            arranger = <div>Arranger: No owner </div>
+            arranger = "No owner"
         }
 
+
         const comments = this.state.comments.map(comment => {
-            return <div><span class="badge bg-success">{comment.user.login}</span>{InstantFormatter.formatInstant(comment.creationTime)} {comment.text}</div>
+            return <div class="border-bottom p-2">
+                <div>
+                    <span class="text-secondary me-1">{comment.user.login} at</span>
+                    <span class="text-secondary">{InstantFormatter.formatInstant(comment.creationTime)}</span>
+                </div>
+                <div>
+                    {comment.text}
+                </div>
+            </div>
         })
+
+
+        var state
+        switch (event.eventState) {
+            case "WAITING_FOR_START":
+                state = <Badge className="bg-warning text-dark" style={{ minWidth: "100%" }}>Waiting</Badge>
+                break;
+            case "STARTED":
+                state = <Badge className="bg-success" style={{ minWidth: "100%" }}>Started</Badge>
+                break;
+            case "FINISHED":
+                state = <Badge className="bg-danger" style={{ minWidth: "100%" }}>Finished</Badge>
+                break;
+            case "CLOSED":
+                state = <Badge className="bg-dark" style={{ minWidth: "100%" }}>Closed</Badge>
+                break;
+        }
 
         return <div>
             <AppNavbar />
             <Container fluid>
+                <Button className='mb-3' onClick={this.toggleComments}
+                    color={this.state.commentsEnabled ? "success" : "outline-success"}>Comments</Button>
+
                 <Row>
                     <Col xs="4">
                         {preview}
-                        <div>Title: {event.name}</div>
-                        <div>Description: {event.description}</div>
-                        {arranger}
-                        <div>Categories: {categories}</div>
-                        <div>Place: {event.place}</div>
+                        <hr class="solid" />
+                        <h2 className='text-center'>{event.name}</h2>
+                        <hr class="solid" />
+                        <div>{event.description}</div>
+                        <div>{categories}</div>
+                        <div>Arranged by {arranger} nearby {event.place}</div>
                         <div>
                             Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
                         </div>
@@ -164,23 +194,33 @@ class EventPage extends Component {
                             Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
                         </div>
                         <div>
-                            {localStorage.getItem("login") == null ? "" :
-                                <InputGroup>
-                                    <Input placeholder='Leave a comment' onChange={this.changeCommentText} value={this.state.commentText} />
-                                    <Button onClick={this.leaveComment} color='info'>Send</Button>
-                                </InputGroup>
-                            }
-                        </div>
-                        <div>
-                            Comments:{comments}
+                            {state}
                         </div>
                     </Col>
-
-                    <Col xs="8">
-                        <Row xs={1} md={3} className="g-4">
-                            {photosList}
-                        </Row>
-                    </Col>
+                    {this.state.commentsEnabled ?
+                        <Col xs="8">
+                            <Row>
+                                <div>
+                                    {localStorage.getItem("login") == null ? "" :
+                                        <InputGroup>
+                                            <Input placeholder='Leave a comment' onChange={this.changeCommentText} value={this.state.commentText} />
+                                            <Button onClick={this.leaveComment} color='success'>Send</Button>
+                                        </InputGroup>
+                                    }
+                                </div>
+                                <div>
+                                    <div class="messagesScroller" >
+                                        {comments}
+                                    </div>
+                                </div>
+                            </Row>
+                        </Col> :
+                        <Col xs="8">
+                            <Row xs={1} md={3} className="g-4">
+                                {photosList}
+                            </Row>
+                        </Col>
+                    }
                 </Row>
             </Container>
             <ErrorNotifier />

@@ -27,4 +27,5 @@ public class EventOutDTO {
     private EventState eventState;
     private Collection<PhotoOutDTO> photos;
     private PhotoOutDTO preview;
+    private Long price;
 }

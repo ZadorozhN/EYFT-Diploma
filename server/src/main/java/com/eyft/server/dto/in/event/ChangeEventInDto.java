@@ -17,4 +17,5 @@ public class ChangeEventInDto {
     private Collection<String> categoriesNames;
     private Instant startInstant;
     private Instant endInstant;
+    private Long price;
 }

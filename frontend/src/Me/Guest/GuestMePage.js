@@ -18,12 +18,14 @@ class GuestMePage extends Component {
         this.state = {
             user: null,
             isLoading: true,
+            setUser: props.setUser
             }
-            
+
             thisObj = this
         }
 
     async componentDidMount() {
+        
         const userUrl = `/guest/${this.props.match.params.login}`;
 
         $.ajax({
@@ -34,6 +36,7 @@ class GuestMePage extends Component {
               },
             success: function(data){
                 thisObj.setState({ user: data, isLoading: false  });
+                thisObj.state.setUser(data)
             },
             error: function(data){
                 ErrorHandler.runError(data)
@@ -42,19 +45,11 @@ class GuestMePage extends Component {
     }
 
     render() {
-
-        // if(localStorage.getItem("login") == null 
-        // || !Constants.isAnyRole((localStorage.getItem("role"))) 
-        // || localStorage.getItem("id") == null){
-        //     return <ErrorNotifier/>
-        // }
-
 		const { user, isLoading } = this.state;
 
 		if (isLoading) {
 			return <p>Loading...</p>;
 		}
-
 
         const avatar = user.avatar !== null ?   <Card > 
                                                     <Card.Img src={"/resources/users/" + user.id + "/photos/" + user.avatar.id}/>

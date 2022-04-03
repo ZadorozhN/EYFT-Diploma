@@ -31,6 +31,7 @@ import MySettings from './Me/MySettings';
 import MyPhotos from './Me/MyPhotos';
 import MyMessenger from './Me/MyMessenger';
 import MyJoinedEvents from './Me/MyJoinedEvents';
+import DepositWithdrawPage from './BankCard/DepositWithdrawPage';
 
 class App extends Component {
   state = {
@@ -43,6 +44,7 @@ class App extends Component {
       <Router>
          <Switch>
            <Route path='/' exact={true} component={Home}/>
+           <Route path='/card' exact={true} component={DepositWithdrawPage}/>
            {/* <Route path='/me' exact={true} component={PersonalPage}/> */}
            <Route path='/me' exact={true} component={MyPage}/>
            <Route path='/me/settings' exact={true} component={MySettings}/>

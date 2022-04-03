@@ -227,7 +227,7 @@ class PropOrdersHandler extends React.Component {
 
                 let status;
                 if (propOrder.status == "ORDERED")
-                    status = <span style={{minWidth:"100%"}} class="badge bg-warning">Ordered</span>
+                    status = <span style={{minWidth:"100%"}} class="badge bg-warning text-dark">Ordered</span>
                 else if (propOrder.status == "ACCEPTED")
                         status = <span style={{minWidth:"100%"}} class="badge bg-success">Accepted</span>
                 else if (propOrder.status == "DELIVERED")

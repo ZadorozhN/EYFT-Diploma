@@ -8,6 +8,7 @@ import ErrorHandler from '../Handler/ErrorHandler';
 import ErrorNotifier from '../Handler/ErrorNotifier';
 import Constants from '../Const/Constants';
 import Multiselect from 'multiselect-react-dropdown';
+import MoneyFormatter from '../Formatter/MoneyFormatter';
 
 
 let thisObj;
@@ -114,8 +115,12 @@ class MeEventsToJoin extends Component {
             headers: {
                 "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
             },
-            success: function () {
-                window.location.reload();
+            success: function (data) {
+                let events = thisObj.state.events.filter(item => item.id != eventId);
+
+                thisObj.setState({ events: events })
+
+                ErrorHandler.runSuccess(data)
             },
             error: function (data) {
                 ErrorHandler.runError(data)
@@ -140,7 +145,7 @@ class MeEventsToJoin extends Component {
             endInstant.toLocaleString('en-GB', { hour12: false })
 
             var categories = event.categoriesNames.map(category => {
-                return <Badge>{category}</Badge>
+                return <Badge className="bg-success me-1" style={{ minWidth: "23%" }}>{category}</Badge>
             })
 
             let photosLength = event.photos.length
@@ -171,17 +176,23 @@ class MeEventsToJoin extends Component {
                     <Card.Body>
                         <Card.Title>{event.name}</Card.Title>
                         <Card.Text>{event.description}</Card.Text>
+                        <div className='mb-3'>
+                            {categories}
+                        </div>
+                        <Link to={"/events/" + event.id}>View more</Link>
+                        <Button color="outline-success" onClick={() => this.join(event.id)} className="mt-3" style={{ minWidth: "100%" }}>Join {event.price ? MoneyFormatter.fromatDollars(event.price):"Free"}</Button>
+                    </Card.Body>
+                    <Card.Footer className="text-muted">
                         <div>
                             Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
                         </div>
                         <div>
                             Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
                         </div>
-                        <Link to={"/events/" + event.id}>more</Link>
-                    </Card.Body>
-                    <Button color="success" onClick={() => this.join(event.id)}>Join</Button>
+                    </Card.Footer>
                 </Card>
             </Col>
+
         });
 
         let toggler = <div class="input-group" style={{ display: "flex", justifyContent: "left" }}>
@@ -189,7 +200,7 @@ class MeEventsToJoin extends Component {
                 <button class={this.state.searchBarEnabled ? "btn btn-success" : "btn btn-outline-success"} id="basic-addon1" onClick={this.toggleSearchBar}>🔎</button>
             </div>
         </div>
-        
+
         return (<div>
             <Row>
                 {toggler}

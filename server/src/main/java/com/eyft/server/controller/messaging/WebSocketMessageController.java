@@ -1,10 +1,14 @@
 package com.eyft.server.controller.messaging;
 
 import com.eyft.server.dto.in.messaging.MessageInDto;
+import com.eyft.server.dto.out.balance.BalanceOutDto;
 import com.eyft.server.dto.out.message.MessageOutDto;
 import com.eyft.server.exception.CustomInternalApplicationException;
+import com.eyft.server.exception.UserDoesNotExistException;
+import com.eyft.server.model.Balance;
 import com.eyft.server.model.Message;
 import com.eyft.server.model.User;
+import com.eyft.server.model.mapper.BalanceMapper;
 import com.eyft.server.model.mapper.MessageMapper;
 import com.eyft.server.model.mapper.UserMapper;
 import com.eyft.server.service.MessageService;
@@ -14,8 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -28,6 +34,8 @@ public class WebSocketMessageController {
     private final UserService userService;
     private final MessageService messageService;
     private final MessageMapper messageMapper;
+    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final BalanceMapper balanceMapper;
 
     @MessageMapping("/receivers/{id}")
     @SendTo("/topic/users/{id}")

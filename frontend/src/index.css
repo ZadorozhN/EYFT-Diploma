@@ -21,3 +21,8 @@ code {
   overflow-y:scroll;
   height:70vh;
 }
+
+
+.search-wrapper.searchWrapper .chip.false.false {
+  background-color: #198754;
+}

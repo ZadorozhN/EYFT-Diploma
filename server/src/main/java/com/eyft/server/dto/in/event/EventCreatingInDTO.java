@@ -17,4 +17,5 @@ public class EventCreatingInDTO {
     private Collection<String> categoriesNames;
     private Instant startInstant;
     private Instant endInstant;
+    private Long price;
 }

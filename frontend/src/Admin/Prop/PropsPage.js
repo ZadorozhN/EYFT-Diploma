@@ -190,13 +190,13 @@ class PropsPage extends React.Component {
 
 		const propsList = props.map(prop => {
 			let types = <div>
-				<span style={{ minWidth: "50%" }} class={"badge " + (prop.costType == "PIECE" ? "bg-success" : "bg-warning")}>{prop.costType}</span>
-				<span style={{ minWidth: "50%" }} class={"badge " + (prop.propType == "PLACE" ? "bg-success" : "bg-warning")}>{prop.propType}</span>
+				<span style={{ minWidth: "50%" }} class={"badge " + (prop.costType == "PIECE" ? "bg-success" : "bg-warning text-dark")}>{prop.costType}</span>
+				<span style={{ minWidth: "50%" }} class={"badge " + (prop.propType == "PLACE" ? "bg-success" : "bg-warning text-dark")}>{prop.propType}</span>
 			</div>
 
 			let typesEdit = <div>
-				<button onClick={this.editModeChangeValue} name="editModeCostType" style={{ minWidth: "50%" }} class={"badge " + (this.state.propEdit.editModeCostType == "PIECE" ? "btn-success" : "btn-warning")}>{this.state.propEdit.editModeCostType}</button>
-				<button onClick={this.editModeChangeValue} name="editModePropType" style={{ minWidth: "50%" }} class={"badge " + (this.state.propEdit.editModePropType == "PLACE" ? "btn-success" : "btn-warning")}>{this.state.propEdit.editModePropType}</button>
+				<button onClick={this.editModeChangeValue} name="editModeCostType" style={{ minWidth: "50%" }} class={"badge " + (this.state.propEdit.editModeCostType == "PIECE" ? "btn-success" : "btn-warning text-dark")}>{this.state.propEdit.editModeCostType}</button>
+				<button onClick={this.editModeChangeValue} name="editModePropType" style={{ minWidth: "50%" }} class={"badge " + (this.state.propEdit.editModePropType == "PLACE" ? "btn-success" : "btn-warning text-dark")}>{this.state.propEdit.editModePropType}</button>
 			</div>
 
 			return <tr key={prop.id}>

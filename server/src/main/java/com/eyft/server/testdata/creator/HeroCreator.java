@@ -57,7 +57,7 @@ public class HeroCreator {
     }
 
     public void createEvent(String login, String name, String description, String place, List<String> categories,
-                            int daysBeforeStart, int daysBeforeEnd, String preview){
+                            int daysBeforeStart, int daysBeforeEnd, String preview, long price){
         User user = userService.findByLogin(login).orElseThrow(UserDoesNotExistException::new);
 
         List<Category> categoryList = categories.stream().map(categoryName -> {
@@ -89,6 +89,7 @@ public class HeroCreator {
         previewPhoto.setPath(preview);
         event.setPhotos(Lists.newArrayList(previewPhoto));
         event.setPreview(previewPhoto);
+        event.setPrice(price);
 
         eventService.save(event);
     }

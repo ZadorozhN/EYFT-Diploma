@@ -122,7 +122,7 @@ class MyProps extends React.Component {
 
             let status = null;
             if (propOrder.status == "ORDERED") {
-                status = <span style={{ minWidth: "100%" }} class="badge bg-warning">Ordered</span>
+                status = <span style={{ minWidth: "100%" }} class="badge bg-warning text-dark">Ordered</span>
             }
             if (propOrder.status == "ACCEPTED") {
                 status = <span style={{ minWidth: "100%" }} class="badge bg-success">Accepted</span>
@@ -198,7 +198,7 @@ class MyProps extends React.Component {
                     <Button className="ms-3"
                         onClick={this.changeSortCost}
                         color={this.state.sortCost == "None" ? "outline-success" : "success"}>
-                        Cost Sort {this.state.sortCost == "None" ? "" : this.state.sortCost == "Asc" ? "🔻" : "🔺"}
+                        Cost Sort {this.state.sortCost == "None" ? "" : this.state.sortCost == "Asc" ? "🔺": "🔻"}
                     </Button>
                 </div>
                 <div>

@@ -1,13 +1,12 @@
 package com.eyft.server.service.impl;
 
+import com.eyft.server.exception.CustomInternalApplicationException;
 import com.eyft.server.exception.InvalidEmailException;
 import com.eyft.server.exception.PhotoDoesNotBelongToEventException;
 import com.eyft.server.exception.validation.CommonValidationException;
-import com.eyft.server.model.Balance;
-import com.eyft.server.model.Photo;
-import com.eyft.server.model.Role;
-import com.eyft.server.model.User;
+import com.eyft.server.model.*;
 import com.eyft.server.repository.UserRepository;
+import com.eyft.server.service.MoneyHandler;
 import com.eyft.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import net.bytebuddy.utility.RandomString;
@@ -27,6 +26,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final PasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
+    private final MoneyHandler moneyHandler;
 
     private final Role standardRole = Role.USER;
 
@@ -149,6 +149,38 @@ public class UserServiceImpl implements UserService {
         setPassword(user, password);
 
         return password;
+    }
+
+    @Override
+    @Transactional
+    public void joinEvent(User user, Event event) {
+        Balance balance = user.getBalance();
+
+        if (balance.getCents() < event.getPrice()) {
+            throw new CustomInternalApplicationException("Not enough amount of money");
+        }
+        moneyHandler.handleRequest(balance.getAccountId(), -event.getPrice());
+        user.getEvents().add(event);
+        save(user);
+
+    }
+
+    @Override
+    public void leaveEvent(User user, Event event) {
+        Balance balance = user.getBalance();
+
+        if (!user.getEvents().contains(event)) {
+            throw new CustomInternalApplicationException("User hasn't joined the event");
+        }
+
+        if (balance.getCents() < event.getPrice()) {
+            throw new CustomInternalApplicationException("Not enough amount of money");
+        }
+
+        moneyHandler.handleRequest(balance.getAccountId(), event.getPrice());
+
+        user.getEvents().remove(event);
+        save(user);
     }
 
     private void checkEmail(User user){

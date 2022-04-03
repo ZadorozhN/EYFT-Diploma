@@ -152,7 +152,7 @@ class UserList extends Component {
 				role = <span class="badge bg-success" style={{ minWidth: "100%" }}>User</span>
 
 			} else if (user.role === "ARRANGER") {
-				role = <span class="badge bg-warning" style={{ minWidth: "100%" }}>Arranger</span>
+				role = <span class="badge bg-warning text-dark" style={{ minWidth: "100%" }}>Arranger</span>
 			}
 
 			let enabled = user.enabled
@@ -276,7 +276,7 @@ class UserList extends Component {
 			</InputGroup>
 			<ButtonGroup className='mt-3'>
 				<Button onClick={this.handleChangeValue} name="filterRole" value="USER" color={this.state.filterRole == "USER" ? "success" : "outline-success"}>User</Button>
-				<Button onClick={this.handleChangeValue} name="filterRole" value="ARRANGER" color={this.state.filterRole == "ARRANGER" ? "warning" : "outline-warning"}>Arranger</Button>
+				<Button onClick={this.handleChangeValue} name="filterRole" value="ARRANGER" color={this.state.filterRole == "ARRANGER" ? "warning" : "outline-warning text-dark"}>Arranger</Button>
 				<Button onClick={this.handleChangeValue} name="filterRole" value="ADMIN" color={this.state.filterRole == "ADMIN" ? "danger" : "outline-danger"}>Admin</Button>
 			</ButtonGroup>
 			<ButtonGroup className='mt-3 ms-3'>

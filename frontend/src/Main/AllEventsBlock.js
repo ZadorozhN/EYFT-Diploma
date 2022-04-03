@@ -92,7 +92,7 @@ class AllEventsBlock extends Component {
             endInstant.toLocaleString('en-GB', { hour12: false })
 
             var categories = event.categoriesNames.map(category => {
-                return <Badge>{category}</Badge>
+                return <Badge className="bg-success me-1" style={{ minWidth: "23%" }}>{category}</Badge>
             })
 
             let photosLength = event.photos.length
@@ -117,22 +117,27 @@ class AllEventsBlock extends Component {
             }
 
             return <Col>
-                <Card>
-                    {eventState}
-                    <Card.Img variant="top" src={photoSrc} />
-                    <Card.Body>
-                        <Card.Title>{event.name}</Card.Title>
-                        <Card.Text>{event.description}</Card.Text>
-                        <div>
-                            Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
-                        </div>
-                        <div>
-                            Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
-                        </div>
-                        <Link to={"/events/" + event.id}>more</Link>
-                    </Card.Body>
-                </Card>
-            </Col>
+            <Card>
+                {eventState}
+                <Card.Img variant="top" src={photoSrc} />
+                <Card.Body>
+                    <Card.Title>{event.name}</Card.Title>
+                    <Card.Text>{event.description}</Card.Text>
+                    <div className='mb-3'>
+                        {categories}
+                    </div>
+                    <Link to={"/events/" + event.id}>View more</Link>
+                </Card.Body>
+                <Card.Footer className="text-muted">
+                    <div>
+                        Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
+                    </div>
+                    <div>
+                        Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
+                    </div>
+                </Card.Footer>
+            </Card>
+        </Col>
         });
 
         let toggler = <div class="input-group" style={{ display: "flex", justifyContent: "left" }}>

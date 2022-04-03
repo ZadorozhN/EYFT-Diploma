@@ -26,6 +26,7 @@ class JoinEvents extends Component {
                 <Container fluid>
                     <MeEventsToJoin/>
                 </Container>
+                <ErrorNotifier/>
             </div>
 		);
     }

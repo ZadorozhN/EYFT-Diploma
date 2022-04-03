@@ -105,8 +105,8 @@ class ArrangementProps extends React.Component {
                 <td style={{ whiteSpace: 'nowrap' }}>{prop.name}</td>
                 <td>{prop.description}</td>
                 <td>{MoneyFormatter.fromatDollars(prop.cost)}</td>
-                <td><span style={{ minWidth: "100%" }} class={"badge " + (prop.costType == "PIECE" ? "bg-success" : "bg-warning")}>{prop.costType}</span></td>
-                <td><span style={{ minWidth: "100%" }} class={"badge " + (prop.propType == "PLACE" ? "bg-success" : "bg-warning")}>{prop.propType}</span></td>
+                <td><span style={{ minWidth: "100%" }} class={"badge " + (prop.costType == "PIECE" ? "bg-success" : "bg-warning text-dark")}>{prop.costType}</span></td>
+                <td><span style={{ minWidth: "100%" }} class={"badge " + (prop.propType == "PLACE" ? "bg-success" : "bg-warning text-dark")}>{prop.propType}</span></td>
                 <td>{isAddedToCart ? removeButton : addButton}</td>
             </tr>
         })

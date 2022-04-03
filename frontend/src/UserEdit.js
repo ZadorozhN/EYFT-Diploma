@@ -108,7 +108,7 @@ class UserEdit extends Component {
                         <FormGroup className="mt-5" style={{ display: "flex", justifyContent: "space-around" }}>
                             <Button onClick={this.handleChange} style={{minWidth: "25%"}} color={user.role == "ADMIN" ? 'danger' : 'outline-danger'} name="role" value='ADMIN' >Admin</Button>
                             <Button onClick={this.handleChange} style={{minWidth: "25%"}} color={user.role == "USER" ? 'success' : 'outline-success'} name="role" value='USER' standalone checked={user.role == "USER"}>User</Button>
-                            <Button onClick={this.handleChange} style={{minWidth: "25%"}} color={user.role == "ARRANGER" ? 'warning' : 'outline-warning'} name="role" value='ARRANGER' standalone checked={user.role == "ARRANGER"} >Arranger</Button>
+                            <Button onClick={this.handleChange} style={{minWidth: "25%"}} color={user.role == "ARRANGER" ? 'warning' : 'outline-warning text-dark'} name="role" value='ARRANGER' standalone checked={user.role == "ARRANGER"} >Arranger</Button>
                             <Button name="enabled" id="enabled" style={{minWidth: "25%"}} color={this.state.user.enabled ? "outline-success": "danger"}
                                 onClick={this.handleChange} autoComplete="enabled">{this.state.user.enabled ? "Enabled": "Disabled"}</Button>
                         </FormGroup>
