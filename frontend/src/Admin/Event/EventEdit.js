@@ -190,6 +190,11 @@ class EventEdit extends Component {
                             onChange={this.handleChange} autoComplete="place" />
                     </FormGroup>
                     <FormGroup className="mt-3">
+                        <Label for="price">Price in Cents</Label>
+                        <Input type="text" name="price" id="price" value={ev.price || ''}
+                            onChange={this.handleChange} autoComplete="place" />
+                    </FormGroup>
+                    <FormGroup className="mt-3">
                         <Button onClick={this.handleChange} className="me-3" name="eventState" value='WAITING_FOR_START' color={ev.eventState == "WAITING_FOR_START" ? "warning" : "outline-warning text-dark"} >Waiting</Button>
                         <Button onClick={this.handleChange} className="me-3" name="eventState" value='STARTED' color={ev.eventState == "STARTED" ? "success" : "outline-success"} >Started</Button>
                         <Button onClick={this.handleChange} className="me-3" name="eventState" value='FINISHED' color={ev.eventState == "FINISHED" ? "danger" : "outline-danger"} >Finished</Button>

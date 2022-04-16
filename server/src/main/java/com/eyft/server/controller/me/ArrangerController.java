@@ -65,7 +65,7 @@ public class ArrangerController {
         User user = tokenHandler.getUser(token);
         Event event = eventService.findById(id).orElseThrow(EventDoesNotExistException::new);
 
-        if(!event.getUser().equals(user) && !user.getRole().equals(Role.ADMIN)){
+        if(!event.getUser().equals(user)) {
             throw new NotEventArrangerException();
         }
 

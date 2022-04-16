@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, Container, ButtonGroup, Table, Input, InputGroup } from 'reactstrap';
+import { Button, Container, ButtonGroup, Table, Input, InputGroup, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import { Card, CardGroup, Col, Row, Image } from 'react-bootstrap'
 import $ from 'jquery'
 import css from './style.css'
+import classnames from 'classnames';
 
 import Badge from 'react-bootstrap/Badge';
 import AppNavbar from './AppNavbar';
@@ -11,6 +12,7 @@ import ErrorNotifier from './Handler/ErrorNotifier';
 import ErrorHandler from './Handler/ErrorHandler';
 import Constants from './Const/Constants';
 import InstantFormatter from './Formatter/InstantFormatter'
+import ParticipantMessageGenerator from './ParticipantMessageGenerator'
 
 let thisObj
 
@@ -23,18 +25,24 @@ class EventPage extends Component {
             isLoading: true,
             comments: [],
             commentText: "",
-            commentsEnabled: false
+            activeTab: '1'
         }
+
+        this.participantMessageGenerator = new ParticipantMessageGenerator()
 
         thisObj = this;
 
         this.leaveComment = this.leaveComment.bind(this);
         this.changeCommentText = this.changeCommentText.bind(this);
-        this.toggleComments = this.toggleComments.bind(this);
+        this.toggle = this.toggle.bind(this);
     }
 
-    toggleComments() {
-        this.setState({ commentsEnabled: !this.state.commentsEnabled })
+    toggle(tab) {
+        if (this.state.activeTab !== tab) {
+            this.setState({
+                activeTab: tab
+            });
+        }
     }
 
     async componentDidMount() {
@@ -108,16 +116,6 @@ class EventPage extends Component {
             return <p>Loading...</p>;
         }
 
-        var startInstant = new Date(event.startInstant * 1000);
-        startInstant.toLocaleString('en-GB', { hour12: false })
-
-        var endInstant = new Date(event.endInstant * 1000);
-        endInstant.toLocaleString('en-GB', { hour12: false })
-
-        var categories = event.categoriesNames.map(category => {
-            return <Badge className="bg bg-success me-1" style={{ minWidth: "24%" }}>{category}</Badge>
-        })
-
         let photosLength = event.photos.length
         let photoSrc = ""
         if (photosLength > 0) {
@@ -135,14 +133,6 @@ class EventPage extends Component {
         </Card>
             : ""
 
-        let arranger = ""
-        if (event.userLogin !== null) {
-            arranger = <Link to={`/guest/${event.userLogin}`}>{event.userLogin}</Link>
-        } else {
-            arranger = "No owner"
-        }
-
-
         const comments = this.state.comments.map(comment => {
             return <div class="border-bottom p-2">
                 <div>
@@ -155,6 +145,80 @@ class EventPage extends Component {
             </div>
         })
 
+        return <div>
+            <AppNavbar />
+            <Container fluid>
+                <Row>
+                    <Col xs="4">
+                        {preview}
+                        <hr class="solid" />
+                        <h2 className='text-center'>{event.name}</h2>
+                        <hr class="solid" />
+                    </Col>
+                    <Col xs="8">
+                        <div>
+                            <Nav tabs>
+                                <NavItem>
+                                    <NavLink
+                                        className={classnames({ active: this.state.activeTab === '1' })}
+                                        onClick={() => { this.toggle('1'); }}
+                                    >
+                                        Information 📊
+                                    </NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink
+                                        className={classnames({ active: this.state.activeTab === '2' })}
+                                        onClick={() => { this.toggle('2'); }}
+                                    >
+                                        Comments 💬
+                                    </NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink
+                                        className={classnames({ active: this.state.activeTab === '3' })}
+                                        onClick={() => { this.toggle('3'); }}
+                                    >
+                                        Photos 📷
+                                    </NavLink>
+                                </NavItem>
+                            </Nav>
+                            <TabContent activeTab={this.state.activeTab}>
+                                <TabPane tabId="1">
+                                    {this.renderInfoSection.bind(this)(event)}
+                                </TabPane>
+                                <TabPane tabId="2">
+                                    {this.renderCommentSection.bind(this)(comments)}
+                                </TabPane>
+                                <TabPane tabId="3">
+                                    {this.renderPhotosSection.bind(this)(photosList, event)}
+                                </TabPane>
+                            </TabContent>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+            <ErrorNotifier />
+        </div>
+    }
+
+    renderInfoSection(event) {
+        let arranger = ""
+        if (event.userLogin !== null) {
+            arranger = <Link to={`/guest/${event.userLogin}`}>{event.userLogin}</Link>
+        } else {
+            arranger = "No owner"
+        }
+
+        var startInstant = new Date(event.startInstant * 1000);
+        startInstant.toLocaleString('en-GB', { hour12: false })
+
+        var endInstant = new Date(event.endInstant * 1000);
+        endInstant.toLocaleString('en-GB', { hour12: false })
+
+        var categories = event.categoriesNames.map(category => {
+            return <Badge className="bg bg-success me-1" style={{ minWidth: "24%" }}>{category}</Badge>
+        })
 
         var state
         switch (event.eventState) {
@@ -172,59 +236,57 @@ class EventPage extends Component {
                 break;
         }
 
-        return <div>
-            <AppNavbar />
-            <Container fluid>
-                <Button className='mb-3' onClick={this.toggleComments}
-                    color={this.state.commentsEnabled ? "success" : "outline-success"}>Comments</Button>
+        let participantMessage = this.participantMessageGenerator.make(event.participantsAmount);
 
-                <Row>
-                    <Col xs="4">
-                        {preview}
-                        <hr class="solid" />
-                        <h2 className='text-center'>{event.name}</h2>
-                        <hr class="solid" />
-                        <div>{event.description}</div>
-                        <div>{categories}</div>
-                        <div>Arranged by {arranger} nearby {event.place}</div>
-                        <div>
-                            Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
-                        </div>
-                        <div>
-                            Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
-                        </div>
-                        <div>
-                            {state}
-                        </div>
-                    </Col>
-                    {this.state.commentsEnabled ?
-                        <Col xs="8">
-                            <Row>
-                                <div>
-                                    {localStorage.getItem("login") == null ? "" :
-                                        <InputGroup>
-                                            <Input placeholder='Leave a comment' onChange={this.changeCommentText} value={this.state.commentText} />
-                                            <Button onClick={this.leaveComment} color='success'>Send</Button>
-                                        </InputGroup>
-                                    }
-                                </div>
-                                <div>
-                                    <div class="messagesScroller" >
-                                        {comments}
-                                    </div>
-                                </div>
-                            </Row>
-                        </Col> :
-                        <Col xs="8">
-                            <Row xs={1} md={3} className="g-4">
-                                {photosList}
-                            </Row>
-                        </Col>
-                    }
-                </Row>
-            </Container>
-            <ErrorNotifier />
+        return (<div>
+            <div>{event.description}</div>
+            <div>
+                <h5>
+                    {categories}
+                </h5>
+            </div>
+            <div>Arranged by {arranger} nearby {event.place}</div>
+            <div>{participantMessage}</div>
+            <div>
+                Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
+            </div>
+            <div>
+                Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
+            </div>
+            <div>
+                <h5>
+                    {state}
+                </h5>
+            </div>
         </div>
+        )
+    }
+
+    renderCommentSection(comments) {
+        return (<div>
+            <div>
+                {localStorage.getItem("login") == null ? "" :
+                    <InputGroup className="my-1">
+                        <Input placeholder='Leave a comment' onChange={this.changeCommentText} value={this.state.commentText} />
+                        <Button onClick={this.leaveComment} color='success'>Send</Button>
+                    </InputGroup>
+                }
+            </div>
+            <div>
+                <div class="messagesScroller" >
+                    {comments}
+                </div>
+            </div>
+        </div>)
+    }
+
+    renderPhotosSection(photosList) {
+        return (<div>
+            <Row xs={1} md={3} className="g-4">
+                {photosList}
+            </Row>
+        </div>
+        )
     }
 }
 

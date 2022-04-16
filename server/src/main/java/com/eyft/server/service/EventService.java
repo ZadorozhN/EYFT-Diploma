@@ -26,6 +26,9 @@ public interface EventService {
 
     void deleteById(Long id);
 
+    @Transactional
+    void delete(Event event);
+
     void save(Event event);
 
     void start(Long id);

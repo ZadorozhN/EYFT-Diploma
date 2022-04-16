@@ -9,6 +9,7 @@ import com.eyft.server.model.Photo;
 import com.eyft.server.repository.EventRepository;
 import com.eyft.server.repository.PhotoRepository;
 import com.eyft.server.service.EventService;
+import com.eyft.server.service.MoneyHandler;
 import com.eyft.server.service.specification.EventSpecification;
 import com.eyft.server.service.specification.Operation;
 import com.eyft.server.service.specification.SearchCriteria;
@@ -30,6 +31,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final PhotoRepository photoRepository;
     private final EventUtil eventUtil;
+    private final MoneyHandler moneyHandler;
 
     @Override
     @Transactional(readOnly = true)
@@ -86,9 +88,22 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Deprecated
     @Transactional
     public void deleteById(Long id) {
         eventRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Event event) {
+        eventRepository.delete(event);
+
+        if(event.getEventState() == EventState.WAITING_FOR_START || event.getEventState() == EventState.STARTED){
+            event.getUsers().parallelStream().forEach(user -> {
+                moneyHandler.handleRequest(user.getBalance().getAccountId(), event.getPrice());
+            });
+        }
     }
 
     @Override

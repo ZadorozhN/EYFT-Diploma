@@ -10,15 +10,15 @@ import ErrorHandler from '../Handler/ErrorHandler';
 import ErrorNotifier from '../Handler/ErrorNotifier';
 import Constants from '../Const/Constants';
 
-let thisObj; 
+let thisObj;
 
 class MeJoinedEvents extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            login : localStorage.getItem("login"),
-            id : localStorage.getItem("id"),
-            role : localStorage.getItem("role"),
+            login: localStorage.getItem("login"),
+            id: localStorage.getItem("id"),
+            role: localStorage.getItem("role"),
             events: [],
             filterField: null,
             filterValue: null,
@@ -49,10 +49,10 @@ class MeJoinedEvents extends Component {
             headers: {
                 "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
             },
-            success: function(data){
+            success: function (data) {
                 thisObj.setState({ events: data.events, isLoading: false });
             },
-            error: function(data){
+            error: function (data) {
                 ErrorHandler.runError(data)
             }
         });
@@ -78,10 +78,10 @@ class MeJoinedEvents extends Component {
 
     render() {
 
-        if(localStorage.getItem("login") == null 
-        || !Constants.isAnyRole((localStorage.getItem("role"))) 
-        || localStorage.getItem("id") == null){
-            return <ErrorNotifier/>
+        if (localStorage.getItem("login") == null
+            || !Constants.isAnyRole((localStorage.getItem("role")))
+            || localStorage.getItem("id") == null) {
+            return <ErrorNotifier />
         }
 
         const eventList = this.state.events.map(event => {
@@ -118,28 +118,30 @@ class MeJoinedEvents extends Component {
             }
 
             return <Col>
-            <Card>
-                {eventState}
-                <Card.Img variant="top" src={photoSrc} />
-                <Card.Body>
-                    <Card.Title>{event.name}</Card.Title>
-                    <Card.Text>{event.description}</Card.Text>
-                    <div className='mb-3'>
-                        {categories}
-                    </div>
-                    <Link to={"/arranger/arranged/" + event.id}>View more</Link>
-                    <Button color="outline-warning" onClick={() => this.leave(event.id)} className="mt-3" style={{minWidth:"100%"}}>Leave</Button>
-                </Card.Body>
-                <Card.Footer className="text-muted">
-                    <div>
-                        Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
-                    </div>
-                    <div>
-                        Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
-                    </div>
-                </Card.Footer>
-            </Card>
-        </Col>
+                <Card>
+                    {eventState}
+                    <Card.Img variant="top" src={photoSrc} />
+                    <Card.Body>
+                        <Card.Title>{event.name}</Card.Title>
+                        <Card.Text>{event.description}</Card.Text>
+                        <div className='mb-3'>
+                            {categories}
+                        </div>
+                        <Link to={"/arranger/arranged/" + event.id}>View more</Link>
+                        {event.eventState == "WAITING_FOR_START" ?
+                            <Button color="outline-warning" onClick={() => this.leave(event.id)} className="mt-3" style={{ minWidth: "100%" }}>Leave</Button> :
+                            ""}
+                    </Card.Body>
+                    <Card.Footer className="text-muted">
+                        <div>
+                            Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
+                        </div>
+                        <div>
+                            Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
+                        </div>
+                    </Card.Footer>
+                </Card>
+            </Col>
         });
 
         return (<div>
@@ -161,9 +163,9 @@ class MeJoinedEvents extends Component {
             eventState: this.state.eventState,
             categoriesNames: this.state.categoriesNames.map(function (el) {
                 return el.trim();
-              }).filter(function (el) {
+            }).filter(function (el) {
                 return el !== "" && el !== null;
-              })
+            })
         }
 
         $.ajax({
@@ -174,10 +176,10 @@ class MeJoinedEvents extends Component {
                 "Content-Type": "application/json",
                 "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
             },
-            success: function(data){
+            success: function (data) {
                 thisObj.setState({ events: data.events, isLoading: false });
             },
-            error: function(data){
+            error: function (data) {
                 ErrorHandler.runError(data)
             }
         });
@@ -287,79 +289,79 @@ class MeJoinedEvents extends Component {
                         Equal
                     </ToggleButton>
                 </ButtonGroup>
-                </FormGroup>
-                <FormGroup className="ms-3 mb-3" >
-                    <Label>Sorting</Label>
-                    <ButtonGroup className="ms-3">
-                        <ToggleButton
-                            sortField="name"
-                            variant={this.state.sortField === "name" ? "info" : "outline-info"}
-                            onClick={this.setSortField}>
-                            Name
-                        </ToggleButton>
-                        <ToggleButton
-                            sortField="description"
-                            variant={this.state.sortField === "description" ? "info" : "outline-info"}
-                            onClick={this.setSortField}>
-                            Description
-                        </ToggleButton>
-                        <ToggleButton
-                            sortField="startInstant"
-                            variant={this.state.sortField === "startInstant" ? "info" : "outline-info"}
-                            onClick={this.setSortField}>
-                            Start Instant
-                        </ToggleButton>
-                        <ToggleButton
-                            sortField="endInstant"
-                            variant={this.state.sortField === "endInstant" ? "info" : "outline-info"}
-                            onClick={this.setSortField}>
-                            End Instant
-                        </ToggleButton>
-                    </ButtonGroup>
+            </FormGroup>
+            <FormGroup className="ms-3 mb-3" >
+                <Label>Sorting</Label>
+                <ButtonGroup className="ms-3">
+                    <ToggleButton
+                        sortField="name"
+                        variant={this.state.sortField === "name" ? "info" : "outline-info"}
+                        onClick={this.setSortField}>
+                        Name
+                    </ToggleButton>
+                    <ToggleButton
+                        sortField="description"
+                        variant={this.state.sortField === "description" ? "info" : "outline-info"}
+                        onClick={this.setSortField}>
+                        Description
+                    </ToggleButton>
+                    <ToggleButton
+                        sortField="startInstant"
+                        variant={this.state.sortField === "startInstant" ? "info" : "outline-info"}
+                        onClick={this.setSortField}>
+                        Start Instant
+                    </ToggleButton>
+                    <ToggleButton
+                        sortField="endInstant"
+                        variant={this.state.sortField === "endInstant" ? "info" : "outline-info"}
+                        onClick={this.setSortField}>
+                        End Instant
+                    </ToggleButton>
+                </ButtonGroup>
 
-                    <ButtonGroup className="ms-3">
-                        <ToggleButton
-                            sortOrder="ASC"
-                            variant={this.state.sortOrder === "ASC" ? "info" : "outline-info"}
-                            onClick={this.setSortOrder}>
-                            Ascend
-                        </ToggleButton>
-                        <ToggleButton
-                            sortOrder="DESC"
-                            variant={this.state.sortOrder === "DESC" ? "info" : "outline-info"}
-                            onClick={this.setSortOrder}>
-                            Descend
-                        </ToggleButton>
-                    </ButtonGroup>
-                </FormGroup>
-                <FormGroup className="ms-3 mb-3" >
-                    <Label>State</Label>
-                    <ButtonGroup className="ms-3">
-                        <ToggleButton 
-                            eventState="WAITING_FOR_START"
-                            variant={this.state.eventState === "WAITING_FOR_START" ? "info" : "outline-info"}
-                            onClick={this.setEventState}>
-                            Waiting for start
-                        </ToggleButton>
-                        <ToggleButton
-                            eventState="STARTED"
-                            variant={this.state.eventState === "STARTED" ? "info" : "outline-info"}
-                            onClick={this.setEventState}>
-                            Started
-                        </ToggleButton>
-                        <ToggleButton
-                            eventState="FINISHED"
-                            variant={this.state.eventState === "FINISHED" ? "info" : "outline-info"}
-                            onClick={this.setEventState}>
-                            Finished
-                        </ToggleButton>
-                        <ToggleButton
-                            eventState="CLOSED"
-                            variant={this.state.eventState == "CLOSED" ? "info" : "outline-info"}
-                            onClick={this.setEventState}>
-                            Closed
-                        </ToggleButton>
-                    </ButtonGroup>
+                <ButtonGroup className="ms-3">
+                    <ToggleButton
+                        sortOrder="ASC"
+                        variant={this.state.sortOrder === "ASC" ? "info" : "outline-info"}
+                        onClick={this.setSortOrder}>
+                        Ascend
+                    </ToggleButton>
+                    <ToggleButton
+                        sortOrder="DESC"
+                        variant={this.state.sortOrder === "DESC" ? "info" : "outline-info"}
+                        onClick={this.setSortOrder}>
+                        Descend
+                    </ToggleButton>
+                </ButtonGroup>
+            </FormGroup>
+            <FormGroup className="ms-3 mb-3" >
+                <Label>State</Label>
+                <ButtonGroup className="ms-3">
+                    <ToggleButton
+                        eventState="WAITING_FOR_START"
+                        variant={this.state.eventState === "WAITING_FOR_START" ? "info" : "outline-info"}
+                        onClick={this.setEventState}>
+                        Waiting for start
+                    </ToggleButton>
+                    <ToggleButton
+                        eventState="STARTED"
+                        variant={this.state.eventState === "STARTED" ? "info" : "outline-info"}
+                        onClick={this.setEventState}>
+                        Started
+                    </ToggleButton>
+                    <ToggleButton
+                        eventState="FINISHED"
+                        variant={this.state.eventState === "FINISHED" ? "info" : "outline-info"}
+                        onClick={this.setEventState}>
+                        Finished
+                    </ToggleButton>
+                    <ToggleButton
+                        eventState="CLOSED"
+                        variant={this.state.eventState == "CLOSED" ? "info" : "outline-info"}
+                        onClick={this.setEventState}>
+                        Closed
+                    </ToggleButton>
+                </ButtonGroup>
 
                 <Button className=" ms-3"
                     onClick={this.clearFilter}

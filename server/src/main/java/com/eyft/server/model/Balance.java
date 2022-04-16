@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -26,7 +27,13 @@ public class Balance {
     @JoinColumn(name = "user_id", unique = true)
     private User user;
 
-    public Balance(String accountId){
+    private Balance(String accountId){
         this.accountId = accountId;
+    }
+
+    public static Balance newInstance() {
+        String accountId = UUID.randomUUID().toString();
+
+        return new Balance(accountId);
     }
 }

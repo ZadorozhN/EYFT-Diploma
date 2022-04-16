@@ -112,10 +112,9 @@ public class MeController {
         events.removeAll(user.getEvents());
 
         List<EventOutDTO> eventOutDTOS = events.stream()
+                .filter(this::canBeJoined)
                 .map(eventMapper::fillEventOutDTO)
                 .collect(Collectors.toList());
-
-        //TODO already finished events
 
         return new EventsOutDTO(eventOutDTOS);
     }
@@ -142,7 +141,6 @@ public class MeController {
         String sortField = eventQueryInDTO.getSortField();
         String sortOrder = eventQueryInDTO.getSortOrder();
 
-        //TODO Optimize this approach
         return new EventsOutDTO(eventService.findAll(filterField, filterOperation, filterValue, sortField, sortOrder).stream()
                 .filter(event -> !user.getEvents().contains(event)
                         && (eventQueryInDTO.getEventState() == null
@@ -153,6 +151,7 @@ public class MeController {
                         .map(Category::getName)
                         .collect(Collectors.toList())
                         .containsAll(eventQueryInDTO.getCategoriesNames())))
+                .filter(this::canBeJoined)
                 .map(eventMapper::fillEventOutDTO)
                 .collect(Collectors.toList()));
     }
@@ -229,5 +228,10 @@ public class MeController {
         Balance balance = user.getBalance();
 
         return balanceMapper.fillBalanceOutDto(balance);
+    }
+
+    private boolean canBeJoined(Event event){
+        return event.getEventState() == EventState.WAITING_FOR_START
+                || event.getEventState() == EventState.STARTED;
     }
 }

@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
             user.setEnabled(true);
             user.setArrangerRoleRequested(false);
             user.setRole(standardRole);
-            Balance balance = new Balance(UUID.randomUUID().toString());
+            Balance balance = Balance.newInstance();
             balance.setUser(user);
             user.setBalance(balance);
         }
@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
             user.setEnabled(true);
             user.setArrangerRoleRequested(false);
             user.setRole(role);
-            Balance balance = new Balance(UUID.randomUUID().toString());
+            Balance balance = Balance.newInstance();
             balance.setUser(user);
             user.setBalance(balance);
         }

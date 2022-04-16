@@ -28,4 +28,5 @@ public class EventOutDTO {
     private Collection<PhotoOutDTO> photos;
     private PhotoOutDTO preview;
     private Long price;
+    private Long participantsAmount;
 }

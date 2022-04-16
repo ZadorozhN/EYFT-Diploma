@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class BalanceServiceImpl implements BalanceService {
@@ -31,6 +33,8 @@ public class BalanceServiceImpl implements BalanceService {
 
     @Override
     public Balance save(Balance balance) {
+        Objects.requireNonNull(balance);
+
         return balanceRepository.save(balance);
     }
 

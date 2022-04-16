@@ -65,4 +65,8 @@ public class Event {
 
     @Column(name = "price")
     private Long price;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "event_id")
+    private List<Comment> comments;
 }

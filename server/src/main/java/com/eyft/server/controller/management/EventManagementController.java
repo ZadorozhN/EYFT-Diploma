@@ -62,7 +62,7 @@ public class EventManagementController {
             userService.save(user);
         });
 
-        eventService.deleteById(id);
+        eventService.delete(event);
 
         return new SuccessfulOutDTO("Event was deleted");
     }

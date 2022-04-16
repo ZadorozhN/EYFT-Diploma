@@ -314,7 +314,7 @@ class ArrangementProps extends React.Component {
                 },
                 data: JSON.stringify(dto)
             }).then((res) => {
-                // window.location.replace("/arranger/props/ordered")
+                window.location.replace("/arranger/props/ordered")
             }).catch((err) => {
                 ErrorHandler.runErrorStringMessage("Not enough amount of money")
             })

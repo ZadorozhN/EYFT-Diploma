@@ -9,6 +9,7 @@ import ErrorNotifier from '../../Handler/ErrorNotifier'
 import $ from "jquery"
 import Waiter from '../../Waiter.js';
 import Multiselect from 'multiselect-react-dropdown';
+import MoneyFormatter from '../../Formatter/MoneyFormatter.js';
 
 const roleAdmin = "ROLE_ADMIN"
 
@@ -397,6 +398,7 @@ class EventList extends Component {
 			return <tr key={event.id}>
 				<td style={{ whiteSpace: 'nowrap' }}><Link to={`/events/${event.id}`}>{event.name}</Link></td>
 				<td>{event.userLogin}</td>
+				<td>{MoneyFormatter.fromatDollars(event.price)}</td>
 				<td>{startInstant.toLocaleString('en-GB', { hour12: false })}</td>
 				<td>{endInstant.toLocaleString('en-GB', { hour12: false })}</td>
 				<td>{categories}</td>
@@ -432,7 +434,8 @@ class EventList extends Component {
 							<thead>
 								<tr>
 									<th width="10%">Name</th>
-									<th width="10%">Owner login</th>
+									<th width="7%">Owner login</th>
+									<th width="5%">Price</th>
 									<th width="10%">Start Instant</th>
 									<th width="10%">End Instant</th>
 									<th width="25%">Category</th>

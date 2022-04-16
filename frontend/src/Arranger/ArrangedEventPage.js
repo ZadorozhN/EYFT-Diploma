@@ -12,6 +12,7 @@ import ErrorHandler from '../Handler/ErrorHandler';
 import ArrangedEventEdit from './ArrangedEventEdit';
 import InstantFormatter from '../Formatter/InstantFormatter';
 import Waiter from '../Waiter';
+import ParticipantMessageGenerator from '../ParticipantMessageGenerator'
 
 const roleArranger = "ROLE_ARRANGER"
 const roleAdmin = "ROLE_ADMIN"
@@ -28,6 +29,8 @@ class ArrangedEventPage extends Component {
             isLoading: true,
             activeTab: '1'
         }
+
+        this.participantMessageGenerator = new ParticipantMessageGenerator()
 
         this.toggle = this.toggle.bind(this);
 
@@ -58,6 +61,9 @@ class ArrangedEventPage extends Component {
                 "Authorization": localStorage.getItem("tokenType") + " " + localStorage.getItem("accessToken")
             },
             success: async function (data) {
+                if(data.userLogin != localStorage.getItem("login")){
+                    return;
+                }
                 thisObj.setState({ event: data });
 
                 const commentsResponse = await fetch(`/comments/event/${thisObj.props.match.params.id}`, {
@@ -219,16 +225,6 @@ class ArrangedEventPage extends Component {
             return <Waiter />;
         }
 
-        var startInstant = new Date(event.startInstant * 1000);
-        startInstant.toLocaleString('en-GB', { hour12: false })
-
-        var endInstant = new Date(event.endInstant * 1000);
-        endInstant.toLocaleString('en-GB', { hour12: false })
-
-        var categories = event.categoriesNames.map(category => {
-            return <Badge className="bg bg-success me-1" style={{ minWidth: "24%" }}>{category}</Badge>
-        })
-
         let photosLength = event.photos.length
         let photoSrc = ""
         if (photosLength > 0) {
@@ -246,6 +242,120 @@ class ArrangedEventPage extends Component {
                 </div>
             </Card>
         })
+
+        const preview = event.preview !== null ? <Card >
+            <Card.Img src={"/resources/events/" + event.id + "/photos/" + event.preview.id} />
+        </Card>
+            : ""
+
+        const comments = this.state.comments.map(comment => {
+            return <div class="border-bottom p-2">
+                <div>
+                    <span class="text-secondary me-1">{comment.user.login} at</span>
+                    <span class="text-secondary">{InstantFormatter.formatInstant(comment.creationTime)}</span>
+                </div>
+                <div>
+                    {comment.text}
+                </div>
+            </div>
+        })
+
+        return <div>
+            <AppNavbar />
+            <Container fluid>
+                <Row>
+                    <Col xs="4">
+                        {preview}
+                        <hr class="solid" />
+                        <h2 className='text-center'>{event.name}</h2>
+                        <hr class="solid" />
+
+                    </Col>
+                    <Col xs="8">
+                        <div>
+                            <Nav tabs>
+                                <NavItem>
+                                    <NavLink
+                                        className={classnames({ active: this.state.activeTab === '1' })}
+                                        onClick={() => { this.toggle('1'); }}
+                                    >
+                                        Information 📊
+                                    </NavLink>
+                                </NavItem>
+                                {event.eventState == "WAITING_FOR_START" || event.eventState == "STARTED" ?
+                                    <NavItem>
+                                        <NavLink
+                                            className={classnames({ active: this.state.activeTab === '2' })}
+                                            onClick={() => { this.toggle('2'); }}
+                                        >
+                                            Edit ✏️
+                                        </NavLink>
+                                    </NavItem> : ""}
+                                <NavItem>
+                                    <NavLink
+                                        className={classnames({ active: this.state.activeTab === '3' })}
+                                        onClick={() => { this.toggle('3'); }}
+                                    >
+                                        Comments 💬
+                                    </NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink
+                                        className={classnames({ active: this.state.activeTab === '4' })}
+                                        onClick={() => { this.toggle('4'); }}
+                                    >
+                                        Photos 📷
+                                    </NavLink>
+                                </NavItem>
+                            </Nav>
+                            <TabContent activeTab={this.state.activeTab}>
+                                <TabPane tabId="1">
+                                    {this.renderInfoSection.bind(this)(event)}
+                                </TabPane>
+                                <TabPane tabId="2">
+                                    <ArrangedEventEdit />
+                                </TabPane>
+                                <TabPane tabId="3">
+                                    <div class="messagesScroller" >
+                                        {comments}
+                                    </div>
+                                </TabPane>
+                                <TabPane tabId="4">
+                                    <div className='my-2'>
+                                        <Input variant="primary" type="file" name="image" id={"eventImages" + event.id} multiple />
+                                        <Button onClick={this.upload} eventId={event.id} variant="success">Upload</Button>
+                                    </div>
+                                    <Row xs={1} md={3} className="g-4">
+                                        {photosList}
+                                    </Row>
+                                </TabPane>
+                            </TabContent>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+            <ErrorNotifier />
+        </div>
+    }
+
+    renderInfoSection(event) {
+        let participantMessage = this.participantMessageGenerator.make(event.participantsAmount);
+
+        var state
+        switch (event.eventState) {
+            case "WAITING_FOR_START":
+                state = <Badge className="bg-warning" style={{ minWidth: "100%" }}>Waiting</Badge>
+                break;
+            case "STARTED":
+                state = <Badge className="bg-success" style={{ minWidth: "100%" }}>Started</Badge>
+                break;
+            case "FINISHED":
+                state = <Badge className="bg-danger" style={{ minWidth: "100%" }}>Finished</Badge>
+                break;
+            case "CLOSED":
+                state = <Badge className="bg-dark" style={{ minWidth: "100%" }}>Closed</Badge>
+                break;
+        }
 
         let eventAction = ""
         if (event.eventState == "WAITING_FOR_START") {
@@ -268,124 +378,45 @@ class ArrangedEventPage extends Component {
                 </div>
         }
 
-        const preview = event.preview !== null ? <Card >
-            <Card.Img src={"/resources/events/" + event.id + "/photos/" + event.preview.id} />
-        </Card>
-            : ""
 
+        var startInstant = new Date(event.startInstant * 1000);
+        startInstant.toLocaleString('en-GB', { hour12: false })
 
-        var state
-        switch (event.eventState) {
-            case "WAITING_FOR_START":
-                state = <Badge className="bg-warning" style={{ minWidth: "100%" }}>Waiting</Badge>
-                break;
-            case "STARTED":
-                state = <Badge className="bg-success" style={{ minWidth: "100%" }}>Started</Badge>
-                break;
-            case "FINISHED":
-                state = <Badge className="bg-danger" style={{ minWidth: "100%" }}>Finished</Badge>
-                break;
-            case "CLOSED":
-                state = <Badge className="bg-dark" style={{ minWidth: "100%" }}>Closed</Badge>
-                break;
-        }
+        var endInstant = new Date(event.endInstant * 1000);
+        endInstant.toLocaleString('en-GB', { hour12: false })
 
-        const comments = this.state.comments.map(comment => {
-            return <div class="border-bottom p-2">
-                <div>
-                    <span class="text-secondary me-1">{comment.user.login} at</span>
-                    <span class="text-secondary">{InstantFormatter.formatInstant(comment.creationTime)}</span>
-                </div>
-                <div>
-                    {comment.text}
-                </div>
-            </div>
+        var categories = event.categoriesNames.map(category => {
+            return <Badge className="bg bg-success me-1" style={{ minWidth: "24%" }}>{category}</Badge>
         })
 
+        return (<div>
+            <div>{event.description}</div>
+            <div>
+                <h5>
+                    {categories}
+                </h5>
+            </div>
+            <div>Nearby {event.place}</div>
+            <div>{event.participantsAmount} participants have already joined the event</div>
+            <div>
+                Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
+            </div>
+            <div>
+                Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
+            </div>
+            <div>
+                <h5>
+                    {state}
+                </h5>
+            </div>
 
-        return <div>
-            <AppNavbar />
-            <Container fluid>
-                <Row>
-                    <Col xs="4">
-                        {preview}
-                        <hr class="solid" />
-                        <h2 className='text-center'>{event.name}</h2>
-                        <hr class="solid" />
-                        <div>{event.description}</div>
-                        <div>{categories}</div>
-                        <div>Nearby {event.place}</div>
-                        <div>
-                            Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
-                        </div>
-                        <div>
-                            Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
-                        </div>
-                        <div>
-                            {state}
-                        </div>
-
-                        {this.state.event.eventState != "CLOSED" ?
-                            <div><hr class="solid" />
-                                <h5 className='text-center'>Actions</h5>
-                                <hr class="solid" />
-                                {eventAction}
-                            </div> : ""}
-                    </Col>
-                    <Col xs="8">
-                        <div>
-                            <Nav tabs>
-                                <NavItem>
-                                    <NavLink
-                                        className={classnames({ active: this.state.activeTab === '1' })}
-                                        onClick={() => { this.toggle('1'); }}
-                                    >
-                                        Photos 📷
-                                    </NavLink>
-                                </NavItem>
-                                {event.eventState == "WAITING_FOR_START" || event.eventState == "STARTED" ?
-                                    <NavItem>
-                                        <NavLink
-                                            className={classnames({ active: this.state.activeTab === '2' })}
-                                            onClick={() => { this.toggle('2'); }}
-                                        >
-                                            Edit ✏️
-                                        </NavLink>
-                                    </NavItem> : ""}
-                                <NavItem>
-                                    <NavLink
-                                        className={classnames({ active: this.state.activeTab === '3' })}
-                                        onClick={() => { this.toggle('3'); }}
-                                    >
-                                        Comments 💬
-                                    </NavLink>
-                                </NavItem>
-                            </Nav>
-                            <TabContent activeTab={this.state.activeTab}>
-                                <TabPane tabId="1">
-                                    <div className='my-2'>
-                                        <Input variant="primary" type="file" name="image" id={"eventImages" + event.id} multiple />
-                                        <Button onClick={this.upload} eventId={event.id} variant="success">Upload</Button>
-                                    </div>
-                                    <Row xs={1} md={3} className="g-4">
-                                        {photosList}
-                                    </Row>
-                                </TabPane>
-                                <TabPane tabId="2">
-                                    <ArrangedEventEdit />
-                                </TabPane>
-                                <TabPane tabId="3">
-                                    <div class="messagesScroller" >
-                                        {comments}
-                                    </div>
-                                </TabPane>
-                            </TabContent>
-                        </div>
-                    </Col>
-                </Row>
-            </Container>
-            <ErrorNotifier />
-        </div>
+            {this.state.event.eventState != "CLOSED" ?
+                <div><hr class="solid" />
+                    <h5 className='text-center'>Actions</h5>
+                    <hr class="solid" />
+                    {eventAction}
+                </div> : ""}
+        </div>)
     }
 }
 

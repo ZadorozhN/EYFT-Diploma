@@ -355,18 +355,6 @@ class MeEventsToJoin extends Component {
                         onClick={this.setEventState}>
                         Started
                     </ToggleButton>
-                    <ToggleButton
-                        eventState="FINISHED"
-                        variant={this.state.eventState === "FINISHED" ? "success" : "outline-success"}
-                        onClick={this.setEventState}>
-                        Finished
-                    </ToggleButton>
-                    <ToggleButton
-                        eventState="CLOSED"
-                        variant={this.state.eventState == "CLOSED" ? "success" : "outline-success"}
-                        onClick={this.setEventState}>
-                        Closed
-                    </ToggleButton>
                 </div>
             </FormGroup>
 

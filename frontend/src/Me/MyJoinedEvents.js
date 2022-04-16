@@ -178,7 +178,9 @@ class MyJoinedEvents extends Component {
                         {categories}
                     </div>
                     <Link to={"/events/" + event.id}>View more</Link>
-                    <Button color="outline-success" onClick={() => this.leave(event.id)} className="mt-3" style={{minWidth:"100%"}}>Leave {event.price ? "+" + MoneyFormatter.fromatDollars(event.price):""}</Button>
+                    {event.eventState == "WAITING_FOR_START" ?
+                            <Button color="outline-warning" onClick={() => this.leave(event.id)} className="mt-3" style={{ minWidth: "100%" }}>Leave</Button> :
+                            ""}
                 </Card.Body>
                 <Card.Footer className="text-muted">
                     <div>
