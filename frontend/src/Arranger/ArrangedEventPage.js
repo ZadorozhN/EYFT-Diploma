@@ -3,7 +3,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { Container, ButtonGroup, Table, Input, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import { Button, Card, CardGroup, Col, Row, Image } from 'react-bootstrap'
 import classnames from 'classnames';
-
 import { Badge } from 'react-bootstrap';
 import AppNavbar from '../AppNavbar';
 import ErrorNotifier from '../Handler/ErrorNotifier';
@@ -13,6 +12,7 @@ import ArrangedEventEdit from './ArrangedEventEdit';
 import InstantFormatter from '../Formatter/InstantFormatter';
 import Waiter from '../Waiter';
 import ParticipantMessageGenerator from '../ParticipantMessageGenerator'
+import {dispense} from "Localization/Dispenser.js"
 
 const roleArranger = "ROLE_ARRANGER"
 const roleAdmin = "ROLE_ADMIN"
@@ -235,8 +235,8 @@ class ArrangedEventPage extends Component {
             return <Card border="light">
                 <Card.Img src={"/resources/events/" + event.id + "/photos/" + photo.id} />
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    {this.state.event.preview.id == photo.id ? <span className='mt-3 border-bottom border-success' style={{ minWidth: "79%" }}>Current Preview</span> :
-                        <Button onClick={this.setPreview} eventId={event.id} photoId={photo.id} variant="outline-success" className="mt-1" style={{ minWidth: "79%" }}>Set as preview</Button>
+                    {this.state.event.preview != null && this.state.event.preview.id == photo.id ? <span className='mt-3 border-bottom border-success' style={{ minWidth: "79%" }}>{dispense("currentPreview")}</span> :
+                        <Button onClick={this.setPreview} eventId={event.id} photoId={photo.id} variant="outline-success" className="mt-1" style={{ minWidth: "79%" }}>{dispense("useAsPreview")}</Button>
                     }
                     <Button onClick={this.removePhoto} eventId={event.id} photoId={photo.id} variant="outline-danger" className="mt-1" style={{ minWidth: "20%" }}>❌</Button>
                 </div>
@@ -251,7 +251,7 @@ class ArrangedEventPage extends Component {
         const comments = this.state.comments.map(comment => {
             return <div class="border-bottom p-2">
                 <div>
-                    <span class="text-secondary me-1">{comment.user.login} at</span>
+                    <span class="text-secondary me-1">{comment.user.login} {dispense("at")}</span>
                     <span class="text-secondary">{InstantFormatter.formatInstant(comment.creationTime)}</span>
                 </div>
                 <div>
@@ -279,7 +279,7 @@ class ArrangedEventPage extends Component {
                                         className={classnames({ active: this.state.activeTab === '1' })}
                                         onClick={() => { this.toggle('1'); }}
                                     >
-                                        Information 📊
+                                        {dispense("information")} 📊
                                     </NavLink>
                                 </NavItem>
                                 {event.eventState == "WAITING_FOR_START" || event.eventState == "STARTED" ?
@@ -288,7 +288,7 @@ class ArrangedEventPage extends Component {
                                             className={classnames({ active: this.state.activeTab === '2' })}
                                             onClick={() => { this.toggle('2'); }}
                                         >
-                                            Edit ✏️
+                                            {dispense("changing")} ✏️
                                         </NavLink>
                                     </NavItem> : ""}
                                 <NavItem>
@@ -296,7 +296,7 @@ class ArrangedEventPage extends Component {
                                         className={classnames({ active: this.state.activeTab === '3' })}
                                         onClick={() => { this.toggle('3'); }}
                                     >
-                                        Comments 💬
+                                        {dispense("comments")} 💬
                                     </NavLink>
                                 </NavItem>
                                 <NavItem>
@@ -304,7 +304,7 @@ class ArrangedEventPage extends Component {
                                         className={classnames({ active: this.state.activeTab === '4' })}
                                         onClick={() => { this.toggle('4'); }}
                                     >
-                                        Photos 📷
+                                        {dispense("photos")} 📷
                                     </NavLink>
                                 </NavItem>
                             </Nav>
@@ -323,7 +323,7 @@ class ArrangedEventPage extends Component {
                                 <TabPane tabId="4">
                                     <div className='my-2'>
                                         <Input variant="primary" type="file" name="image" id={"eventImages" + event.id} multiple />
-                                        <Button onClick={this.upload} eventId={event.id} variant="success">Upload</Button>
+                                        <Button onClick={this.upload} eventId={event.id} variant="success">{dispense("upload")}</Button>
                                     </div>
                                     <Row xs={1} md={3} className="g-4">
                                         {photosList}
@@ -344,16 +344,16 @@ class ArrangedEventPage extends Component {
         var state
         switch (event.eventState) {
             case "WAITING_FOR_START":
-                state = <Badge className="bg-warning" style={{ minWidth: "100%" }}>Waiting</Badge>
+                state = <Badge className="bg-warning" style={{ minWidth: "100%" }}>{dispense("waiting")}</Badge>
                 break;
             case "STARTED":
-                state = <Badge className="bg-success" style={{ minWidth: "100%" }}>Started</Badge>
+                state = <Badge className="bg-success" style={{ minWidth: "100%" }}>{dispense("started")}</Badge>
                 break;
             case "FINISHED":
-                state = <Badge className="bg-danger" style={{ minWidth: "100%" }}>Finished</Badge>
+                state = <Badge className="bg-danger" style={{ minWidth: "100%" }}>{dispense("finished")}</Badge>
                 break;
             case "CLOSED":
-                state = <Badge className="bg-dark" style={{ minWidth: "100%" }}>Closed</Badge>
+                state = <Badge className="bg-dark" style={{ minWidth: "100%" }}>{dispense("closed")}</Badge>
                 break;
         }
 
@@ -361,20 +361,20 @@ class ArrangedEventPage extends Component {
         if (event.eventState == "WAITING_FOR_START") {
             eventAction =
                 <div className="d-grid gap-2 mt-2">
-                    <Button variant="success" onClick={this.startEvent} eventId={event.id}>Start</Button>
-                    <Button variant="dark" onClick={this.closeEvent} eventId={event.id}>Close</Button>
+                    <Button variant="success" onClick={this.startEvent} eventId={event.id}>{dispense("start")}</Button>
+                    <Button variant="dark" onClick={this.closeEvent} eventId={event.id}>{dispense("close")}</Button>
                 </div>
         } else if (event.eventState == "STARTED") {
             eventAction =
                 <div className="d-grid gap-2 mt-2">
-                    <Button variant="warning" onClick={this.stopEvent} eventId={event.id}>Roll back</Button>
-                    <Button variant="danger" onClick={this.finishEvent} eventId={event.id}>Finish</Button>
-                    <Button variant="dark" onClick={this.closeEvent} eventId={event.id}>Close</Button>
+                    <Button variant="warning" onClick={this.stopEvent} eventId={event.id}>{dispense("rollback")}</Button>
+                    <Button variant="danger" onClick={this.finishEvent} eventId={event.id}>{dispense("finish")}</Button>
+                    <Button variant="dark" onClick={this.closeEvent} eventId={event.id}>{dispense("close")}</Button>
                 </div>
         } else if (event.eventState == "FINISHED") {
             eventAction =
                 <div className="d-grid gap-2 mt-2">
-                    <Button variant="dark" onClick={this.closeEvent} eventId={event.id}>Close</Button>
+                    <Button variant="dark" onClick={this.closeEvent} eventId={event.id}>{dispense("close")}</Button>
                 </div>
         }
 
@@ -396,13 +396,13 @@ class ArrangedEventPage extends Component {
                     {categories}
                 </h5>
             </div>
-            <div>Nearby {event.place}</div>
-            <div>{event.participantsAmount} participants have already joined the event</div>
+            <div>В {event.place}</div>
+            <div>{new ParticipantMessageGenerator().make(event.participantsAmount)}</div>
             <div>
-                Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
+                {dispense("startAt")} {startInstant.toLocaleString('en-GB', { hour12: false })}
             </div>
             <div>
-                Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
+                {dispense("finishAt")} {endInstant.toLocaleString('en-GB', { hour12: false })}
             </div>
             <div>
                 <h5>
@@ -412,7 +412,7 @@ class ArrangedEventPage extends Component {
 
             {this.state.event.eventState != "CLOSED" ?
                 <div><hr class="solid" />
-                    <h5 className='text-center'>Actions</h5>
+                    <h5 className='text-center'>{dispense("actions")}</h5>
                     <hr class="solid" />
                     {eventAction}
                 </div> : ""}

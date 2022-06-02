@@ -9,6 +9,7 @@ import $ from 'jquery';
 import ErrorNotifier from '../Handler/ErrorNotifier';
 import ErrorHandler from '../Handler/ErrorHandler';
 import style from "../style.css"
+import { dispense } from "Localization/Dispenser";
 
 const address = "/category-management/categories"
 
@@ -82,19 +83,19 @@ class CreateCategoryForm extends React.Component {
         <Container className="createCategoryFormContainer">
             <Form onSubmit={this.handleSubmit}>
                 <FormGroup className="mt-3">
-                    <Label for="name">Name</Label>
+                    <Label for="name">{dispense("title")}</Label>
                     <Input type="text" name="name" id="name" value={category.name || ''}
                         onChange={this.handleChange} autoComplete="event" />
                 </FormGroup>
                 <FormGroup className="mt-3">
-                    <Label for="description">Description</Label>
+                    <Label for="description">{dispense("description")}</Label>
                     <Input type="text" name="description" id="description" value={category.description || ''}
                         onChange={this.handleChange} autoComplete="description" />
                 </FormGroup>
                 <FormGroup className="mt-4">
                     <div class="saveCancelCategoryButtons">
-                        <Button color="success" className='saveCategoryButton' type="submit">Save</Button>{' '}
-                        <Button color="secondary" className='cancelCategoryButton' onClick={this.toggleCreateMode}>Cancel</Button>
+                        <Button color="success" className='saveCategoryButton' type="submit">{dispense("create")}</Button>{' '}
+                        <Button color="secondary" className='cancelCategoryButton' onClick={this.toggleCreateMode}>{dispense("cancel")}</Button>
                     </div>
                 </FormGroup>
             </Form>

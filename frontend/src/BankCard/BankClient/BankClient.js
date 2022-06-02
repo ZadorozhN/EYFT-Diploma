@@ -1,5 +1,6 @@
 import axios from "axios";
 import ErrorHandler from "../../Handler/ErrorHandler";
+import { dispense } from "Localization/Dispenser";
 
 class BankClient {
     withdraw(login, cents) {
@@ -20,7 +21,7 @@ class BankClient {
                 ErrorHandler.runStringMessage(response.data.message);
             })
             .catch(function (response) {
-                ErrorHandler.runErrorStringMessage("Not enough amount of money");
+                ErrorHandler.runErrorStringMessage(dispense("notEnoughAmountOfMoney"));
             })  
     }
 
@@ -42,7 +43,7 @@ class BankClient {
                 ErrorHandler.runStringMessage(response.data.message);
             })
             .catch(function (response) {
-                ErrorHandler.runErrorStringMessage("Bank error. Please try again later");
+                ErrorHandler.runErrorStringMessage(dispense("bankErrorPleaseTryAgainLater"));
             })
     }
 }

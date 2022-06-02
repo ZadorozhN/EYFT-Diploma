@@ -5,6 +5,7 @@ import AppNavbar from './AppNavbar';
 import ErrorHandler from './Handler/ErrorHandler';
 import ErrorNotifier from './Handler/ErrorNotifier';
 import $ from "jquery"
+import {dispense} from 'Localization/Dispenser'
 
 const roleAdmin = "ROLE_ADMIN"
 
@@ -89,32 +90,32 @@ class UserEdit extends Component {
                 <div style={{ minWidth: '60%' }}>
                     <Form onSubmit={this.handleSubmit} style={{ minWidth: '100%'}}>
                         <FormGroup className="mt-3">
-                            <Label for="email">Email</Label>
+                            <Label for="email">{dispense('email')}</Label>
                             <Input type="text" name="email" id="email" value={user.email || ''}
                                 onChange={this.handleChange} autoComplete="email" />
                         </FormGroup>
                         <FormGroup className="mt-3" style={{ display: "flex", justifyContent: "space-between" }}>
                             <div style={{ minWidth: "49%" }}>
-                                <Label for="firstName">First Name</Label>
+                                <Label for="firstName">{dispense('firstName')}</Label>
                                 <Input type="text" name="firstName" id="firstName" value={user.firstName || ''}
                                     onChange={this.handleChange} autoComplete="firstName" />
                             </div>
                             <div style={{ minWidth: "49%" }}>
-                                <Label for="lastName">Last Name</Label>
+                                <Label for="lastName">{dispense('lastName')}</Label>
                                 <Input type="text" name="lastName" id="lastName" value={user.lastName || ''}
                                     onChange={this.handleChange} autoComplete="lastName" />
                             </div>
                         </FormGroup>
                         <FormGroup className="mt-5" style={{ display: "flex", justifyContent: "space-around" }}>
-                            <Button onClick={this.handleChange} style={{minWidth: "25%"}} color={user.role == "ADMIN" ? 'danger' : 'outline-danger'} name="role" value='ADMIN' >Admin</Button>
-                            <Button onClick={this.handleChange} style={{minWidth: "25%"}} color={user.role == "USER" ? 'success' : 'outline-success'} name="role" value='USER' standalone checked={user.role == "USER"}>User</Button>
-                            <Button onClick={this.handleChange} style={{minWidth: "25%"}} color={user.role == "ARRANGER" ? 'warning' : 'outline-warning text-dark'} name="role" value='ARRANGER' standalone checked={user.role == "ARRANGER"} >Arranger</Button>
+                            <Button onClick={this.handleChange} style={{minWidth: "25%"}} color={user.role == "ADMIN" ? 'danger' : 'outline-danger'} name="role" value='ADMIN' >{dispense('admin')}</Button>
+                            <Button onClick={this.handleChange} style={{minWidth: "25%"}} color={user.role == "USER" ? 'success' : 'outline-success'} name="role" value='USER' standalone checked={user.role == "USER"}>{dispense('user')}</Button>
+                            <Button onClick={this.handleChange} style={{minWidth: "25%"}} color={user.role == "ARRANGER" ? 'warning' : 'outline-warning text-dark'} name="role" value='ARRANGER' standalone checked={user.role == "ARRANGER"} >{dispense('arranger')}</Button>
                             <Button name="enabled" id="enabled" style={{minWidth: "25%"}} color={this.state.user.enabled ? "outline-success": "danger"}
-                                onClick={this.handleChange} autoComplete="enabled">{this.state.user.enabled ? "Enabled": "Disabled"}</Button>
+                                onClick={this.handleChange} autoComplete="enabled">{this.state.user.enabled ? dispense("enabled") : dispense("disabled")}</Button>
                         </FormGroup>
                         <FormGroup className="mt-5" style={{ display: "flex", justifyContent: "space-between" }}>
-                            <Button color="success" style={{ minWidth: "49%" }} type="submit">Save</Button>{' '}
-                            <Button color="secondary" style={{ minWidth: "49%" }} tag={Link} to="/user-management/users">Cancel</Button>
+                            <Button color="success" style={{ minWidth: "49%" }} type="submit">{dispense('save')}</Button>{' '}
+                            <Button color="secondary" style={{ minWidth: "49%" }} tag={Link} to="/user-management/users">{dispense('cancel')}</Button>
                         </FormGroup>
                     </Form>
                 </div>

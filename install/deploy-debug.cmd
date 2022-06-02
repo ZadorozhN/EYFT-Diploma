@@ -1,0 +1,1 @@
+docker compose -f docker-compose-debug.yml -p "enjoy-your-free-time-debug" up

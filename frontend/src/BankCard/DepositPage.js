@@ -2,6 +2,7 @@
 import React from "react";
 import CardReactFormContainer from 'card-react';
 import { Row, Col, Container, Form, Input, InputGroup, Nav, NavItem, NavLink, TabContent, TabPane, Button } from 'reactstrap';
+import { dispense } from "Localization/Dispenser";
 
 class DepositPage extends React.Component {
     constructor(props) {
@@ -44,7 +45,7 @@ class DepositPage extends React.Component {
     render() {
         return <div>
 
-            <h2 className='my-3'>Deposit</h2>
+            <h2 className='my-3'>{dispense("deposit")}</h2>
             <Row>
                 <Col xs="4" style={{ display: "flex", }}>
                     <CardReactFormContainer
@@ -75,7 +76,7 @@ class DepositPage extends React.Component {
                         <Form className='mb-5'>
                             <InputGroup className='mb-3'>
                                 <Input onChange={this.handleChange}
-                                    placeholder="Card number"
+                                    placeholder={dispense("cardNumber")}
                                     maxLength={19} type="text" name="CCnumber_deposit" style={{ width: "300px" }} />
                                 <Input onChange={this.handleChange}
                                     placeholder="CVC"
@@ -83,7 +84,7 @@ class DepositPage extends React.Component {
                             </InputGroup>
                             <InputGroup>
                                 <Input onChange={this.handleChange}
-                                    placeholder="Full name"
+                                    placeholder={dispense("fullName")}
                                     type="text" name="CCname_deposit" style={{ width: "300px" }} />
                                 <Input onChange={this.handleChange}
                                     placeholder="MM/YY" maxLength={7}
@@ -92,7 +93,7 @@ class DepositPage extends React.Component {
                             <InputGroup className="mt-3">
                                 <Input placeholder="Cents" type="number" name="cents" value={this.state.cents} onChange={this.handleChange} style={{ width: "200px" }} />
                                 <Button disabled={!this.state.valid}
-                                    onClick={() => this.bankClient.deposit(localStorage.getItem("login"), this.state.cents)} color="success">Deposit</Button>
+                                    onClick={() => this.bankClient.deposit(localStorage.getItem("login"), this.state.cents)} color="success">{dispense("deposit")}</Button>
                             </InputGroup>
                         </Form>
                     </CardReactFormContainer>

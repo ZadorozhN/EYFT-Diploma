@@ -8,6 +8,7 @@ import $ from "jquery"
 import style from "../style.css"
 import CreateCategoryForm from './CreateCategoryForm.js';
 import Waiter from '../Waiter.js';
+import { dispense } from "Localization/Dispenser";
 
 const roleAdmin = "ROLE_ADMIN"
 
@@ -190,11 +191,11 @@ class CategoryList extends Component {
 					<ButtonGroup style={{ minWidth: "100%" }}>
 						{this.state.editModeId == category.id
 							? <ButtonGroup style={{ minWidth: "50%" }}>
-								<Button size="sm" color="warning" style={{ minWidth: "50%" }} onClick={() => this.saveCategory(category)} >Save</Button>
-								<Button size="sm" color="success" style={{ minWidth: "50%" }} onClick={() => this.cancelEditing()} >Cancel</Button>
+								<Button size="sm" color="warning" style={{ minWidth: "50%" }} onClick={() => this.saveCategory(category)} >{dispense("save")}</Button>
+								<Button size="sm" color="success" style={{ minWidth: "50%" }} onClick={() => this.cancelEditing()} >{dispense("cancel")}</Button>
 							</ButtonGroup>
-							: <Button size="sm" color="success" style={{ minWidth: "50%" }} onClick={() => this.editMode(category)} >Quick Edit</Button>}
-						<Button size="sm" color="danger" style={{ minWidth: "50%" }} onClick={() => this.remove(category.id)}>Delete</Button>
+							: <Button size="sm" color="success" style={{ minWidth: "50%" }} onClick={() => this.editMode(category)} >{dispense("edit")}</Button>}
+						<Button size="sm" color="danger" style={{ minWidth: "50%" }} onClick={() => this.remove(category.id)}>{dispense("delete")}</Button>
 					</ButtonGroup>
 				</td>
 			</tr>
@@ -206,12 +207,12 @@ class CategoryList extends Component {
 				<Container fluid >
 					{this.state.createMode ? <CreateCategoryForm addCategory={this.addCategory} toggle={this.toggleCreateMode} /> :
 						<div class="categoriesList mt-3 p-3">
-							<Button color='success' onClick={this.toggleCreateMode} >Create Category</Button>
+							<Button color='success' onClick={this.toggleCreateMode} >{dispense("createCategory")}</Button>
 							<div class="input-group categoryNameInput">
 								<div class="input-group-prepend">
 									<span class="input-group-text" id="basic-addon1">🔎</span>
 								</div>
-								<input type="text" class="form-control" value={this.state.filterValue} onChange={this.filterCategories} placeholder="Category Name" aria-label="Category Name" aria-describedby="basic-addon1" />
+								<input type="text" class="form-control" value={this.state.filterValue} onChange={this.filterCategories} placeholder={dispense("categoryName")} aria-label="Category Name" aria-describedby="basic-addon1" />
 							</div>
 						</div>
 					}
@@ -219,9 +220,9 @@ class CategoryList extends Component {
 						<Table >
 							<thead>
 								<tr>
-									<th width="15%">Name</th>
-									<th width="65%">Description</th>
-									<th width="20%">Operations</th>
+									<th width="15%">{dispense("title")}</th>
+									<th width="65%">{dispense("description")}</th>
+									<th width="20%">{dispense("operations")}</th>
 								</tr>
 							</thead>
 							<tbody>

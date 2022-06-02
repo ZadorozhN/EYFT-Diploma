@@ -60,12 +60,12 @@ public class DataFillerListener implements ApplicationListener<DataFillingStartE
             heroCreator.createPropOrder("master", "The Ring", 1L, null);
             heroCreator.createPropOrder("master", "The Ring", 1L, null);
 
-            heroCreator.sendMoney("Frodo", 400L);
-            heroCreator.sendMoney("Bilbo", 7000L);
+            heroCreator.sendMoney("Frodo", 1000000L);
+            heroCreator.sendMoney("Bilbo", 1000000L);
             heroCreator.sendMoney("Saruman", 1000000L);
-            heroCreator.sendMoney("Gandalf", 50000L);
-            heroCreator.sendMoney("Elrond", 500000L);
-            heroCreator.sendMoney("master", 9999999999L);
+            heroCreator.sendMoney("Gandalf", 1000000L);
+            heroCreator.sendMoney("Elrond", 1000000L);
+            heroCreator.sendMoney("master", 1000000L);
         }
     }
 }

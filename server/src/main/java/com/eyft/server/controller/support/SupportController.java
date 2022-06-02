@@ -28,7 +28,7 @@ public class SupportController {
 
 
     private void processForgottenPasswordRequest(SupportInDto supportInDto){
-        User user = userService.findByLogin(supportInDto.getLogin()).orElseThrow(UserDoesNotExistException::new);
+        User user = userService.findByEmail(supportInDto.getEmail()).orElseThrow(UserDoesNotExistException::new);
 
         String password = userService.recoverPassword(user);
 

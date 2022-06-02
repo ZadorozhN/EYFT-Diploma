@@ -11,7 +11,6 @@ import EventList from './Admin/Event/EventList.js';
 import EventEdit from './Admin/Event/EventEdit.js';
 import CreateCategoryForm from './Category/CreateCategoryForm';
 import CategoryList from './Category/CategoryList';
-import PersonalPage from './Me/PersonalPage';
 import JoinEvents from './Me/JoinEvents';
 import AdminPage from './Admin/AdminPage';
 import ArrangerPage from './Arranger/ArrangerPage'
@@ -22,7 +21,6 @@ import ArrangedEventPage from './Arranger/ArrangedEventPage';
 import GuestPersonalPage from './Me/Guest/GuestPersonalPage';
 import PropsPage from './Admin/Prop/PropsPage'
 import CreateProp from './Admin/Prop/CreateProp'
-import PropEdit from './Admin/Prop/PropEdit';
 import ArrangementProps from './Arranger/PropsForArrangement/ArrangementProps';
 import MyProps from './Arranger/PropsForArrangement/MyProps';
 import MyPage from './Me/MyPage';
@@ -45,14 +43,12 @@ class App extends Component {
          <Switch>
            <Route path='/' exact={true} component={Home}/>
            <Route path='/card' exact={true} component={DepositWithdrawPage}/>
-           {/* <Route path='/me' exact={true} component={PersonalPage}/> */}
            <Route path='/me' exact={true} component={MyPage}/>
            <Route path='/me/settings' exact={true} component={MySettings}/>
            <Route path='/me/photos' exact={true} component={MyPhotos}/>
            <Route path='/me/messenger' exact={true} component={MyMessenger}/>
            <Route path='/me/events' exact={true} component={JoinEvents}/>
            <Route path='/me/joined' exact={true} component={MyJoinedEvents}/>
-           {/* <Route path='/me/join-events' exact={true} component={JoinEvents}/> */}
            <Route path='/admin' exact={true} component={AdminPage}/>
            <Route path='/arranger' exact={true} component={ArrangerPage}/>
            <Route path='/arranger/props/market' exact={true} component={ArrangementProps}/>
@@ -72,7 +68,6 @@ class App extends Component {
            <Route path='/prop-management/props/' exact={true} component={PropsPage}/>
            <Route path='/prop-management/propOrders/' exact={true} component={PropOrdersHandler}/>
            <Route path="/prop-management/props/create" exact={true} component={CreateProp}/>
-           <Route path="/prop-management/props/:id" exact={true} component={PropEdit}/>
            <Route path='/events/:id' exact={true} component={EventPage}/>
            <Route path='/guest/:login' exact={true} component={GuestPersonalPage}/>
          </Switch>

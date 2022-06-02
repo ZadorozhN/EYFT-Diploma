@@ -7,6 +7,7 @@ import ErrorHandler from '../../Handler/ErrorHandler';
 import ErrorNotifier from '../../Handler/ErrorNotifier';
 import Constants from '../../Const/Constants';
 import Waiter from '../../Waiter';
+import { dispense } from "Localization/Dispenser";
 
 const address = ""
 
@@ -46,7 +47,7 @@ class GuestMePhotos extends Component {
 		const { user, isLoading } = this.state;
 
 		if (isLoading) {
-			return <p>Loading ...</p>;
+			return <p>{dispense("loading...")}</p>;
 		}
 
 		const photosList = this.state.user.photos.map(photo => {

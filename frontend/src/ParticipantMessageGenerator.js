@@ -8,7 +8,7 @@ class ParticipantMessageGenerator {
     make(participantsAmount) {
         this.createMessageParts(participantsAmount)
 
-        return `${this.number} participant${this.pluralModifier} ${this.verb} joined the event`
+        return `${this.number} участник${this.pluralModifier} ${this.verb}`
     }
 
     createMessageParts(participantsAmount) {
@@ -22,21 +22,21 @@ class ParticipantMessageGenerator {
     }
 
     thereAreNoParticipants() {
-        this.number = 'No';
-        this.verb = 'have';
-        this.pluralModifier = 's';
+        this.number = '0';
+        this.verb = 'присоединилось';
+        this.pluralModifier = 'ов';
     }
 
     thereIsOneParticipant() {
         this.number = '1';
-        this.verb = 'has';
+        this.verb = 'присоединился';
         this.pluralModifier = '';
     }
 
     thereAreManyParticipants(participantsAmount) {
         this.number = participantsAmount;
-        this.verb = 'have';
-        this.pluralModifier = 's';
+        this.verb = 'присоединились';
+        this.pluralModifier = 'ов';
     }
 }
 

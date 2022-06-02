@@ -39,7 +39,7 @@ public class EventController {
     private final MailService mailService;
     private final EventUtil eventUtil;
     private final MessageService messageService;
-    private final CommentService commentService ;
+    private final CommentService commentService;
 
     @GetMapping("/{id}")
     public EventOutDTO getEvent(@PathVariable Long id) {
@@ -147,7 +147,7 @@ public class EventController {
         return new SuccessfulOutDTO("Event has been finished");
     }
 
-    @PutMapping("/{id}/close")
+    @PutMapping("/{id}/close")      
     public SuccessfulOutDTO closeEvent(@PathVariable Long id, @RequestHeader(name="Authorization") String token) {
 
         Event event = eventService.findById(id).orElseThrow(EventDoesNotExistException::new);

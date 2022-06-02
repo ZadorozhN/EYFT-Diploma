@@ -10,6 +10,7 @@ import $ from "jquery"
 import MoneyFormatter from '../../Formatter/MoneyFormatter.js';
 import Waiter from '../../Waiter.js';
 import CreateProp from "./CreateProp"
+import {dispense} from "Localization/Dispenser.js"
 
 const roleAdmin = "ROLE_ADMIN"
 
@@ -202,19 +203,19 @@ class PropsPage extends React.Component {
 			return <tr key={prop.id}>
 				<td style={{ whiteSpace: 'nowrap' }}>{this.state.propEdit.editModeId == prop.id ? <input value={this.state.propEdit.editModeName} name="editModeName" onChange={this.editModeChangeValue}></input> : prop.name}</td>
 				<td>{this.state.propEdit.editModeId == prop.id ? <input value={this.state.propEdit.editModeDescription} name="editModeDescription" style={{ minWidth: "100%" }} onChange={this.editModeChangeValue}></input> : prop.description}</td>
-				<td>{this.state.propEdit.editModeId == prop.id ? <input value={this.state.propEdit.editModeCost} name="editModeCost" onChange={this.editModeChangeValue} type="number"></input> : MoneyFormatter.fromatDollars(prop.cost)}</td>
+				<td>{this.state.propEdit.editModeId == prop.id ? <input value={this.state.propEdit.editModeCost} name="editModeCost" onChange={this.editModeChangeValue} type="number"></input> : MoneyFormatter.format(prop.cost)}</td>
 				<td>{this.state.propEdit.editModeId == prop.id ? typesEdit : types}
 				</td>
 				<td>
 					<ButtonGroup style={{ minWidth: "100%" }}>
 
 						{this.state.propEdit.editModeId == prop.id
-							? <ButtonGroup style={{ minWidth: "50%" }}><Button size="sm" color="warning" style={{ minWidth: "50%" }} onClick={() => this.saveProp(prop)} >Save</Button>
-								<Button size="sm" color="success" style={{ minWidth: "50%" }} onClick={() => this.cancelEditing()} >Cancel</Button>
+							? <ButtonGroup style={{ minWidth: "50%" }}><Button size="sm" color="warning" style={{ minWidth: "50%" }} onClick={() => this.saveProp(prop)} >{dispense("save")}</Button>
+								<Button size="sm" color="success" style={{ minWidth: "50%" }} onClick={() => this.cancelEditing()} >{dispense("cancel")}</Button>
 								</ButtonGroup>
-							: <Button size="sm" color="success" style={{ minWidth: "50%" }} onClick={() => this.editMode(prop)}>Quick Edit</Button>
+							: <Button size="sm" color="success" style={{ minWidth: "50%" }} onClick={() => this.editMode(prop)}>{dispense("quickEdit")}</Button>
 						}
-						<Button size="sm" color="danger" style={{ minWidth: "50%" }} onClick={() => this.remove(prop.id)}>Delete</Button>
+						<Button size="sm" color="danger" style={{ minWidth: "50%" }} onClick={() => this.remove(prop.id)}>{dispense("delete")}</Button>
 					</ButtonGroup>
 				</td>
 			</tr>
@@ -226,12 +227,12 @@ class PropsPage extends React.Component {
 				<Container fluid>
 					{this.state.createMode ? <CreateProp addProp={this.addProp} toggle={this.toggleCreateMode} /> :
 						<div class="propsList mt-3 p-3">
-							<Button color='success' onClick={this.toggleCreateMode} >Create Prop</Button>
+							<Button color='success' onClick={this.toggleCreateMode} >{dispense("createProp")}</Button>
 							<div class="input-group propNameInput">
 								<div class="input-group-prepend">
 									<span class="input-group-text" id="basic-addon1">🔎</span>
 								</div>
-								<input type="text" class="form-control" value={this.state.filterValue} onChange={this.filterProps} placeholder="Prop Name" aria-label="Prop Name" aria-describedby="basic-addon1" />
+								<input type="text" class="form-control" value={this.state.filterValue} onChange={this.filterProps} placeholder={dispense("propName")} aria-label="Prop Name" aria-describedby="basic-addon1" />
 							</div>
 						</div>
 					}
@@ -240,11 +241,11 @@ class PropsPage extends React.Component {
 						<Table>
 							<thead>
 								<tr>
-									<th width="15%">Name</th>
-									<th width="40%">Description</th>
-									<th width="10%">Cost</th>
-									<th width="10%">Type</th>
-									<th width="25%">Operations</th>
+									<th width="15%">{dispense("name")}</th>
+									<th width="40%">{dispense("description")}</th>
+									<th width="10%">{dispense("cost")}</th>
+									<th width="10%">{dispense("type")}</th>
+									<th width="25%">{dispense("operations")}</th>
 								</tr>
 							</thead>
 							<tbody>

@@ -24,8 +24,6 @@ public class EventUtil {
     }
 
     public boolean isRelevant(Event event) {
-        Instant now = Instant.now();
-
         return event.getEventState().equals(EventState.WAITING_FOR_START)
                 || event.getEventState().equals(EventState.STARTED);
     }

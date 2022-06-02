@@ -48,6 +48,22 @@ public class User {
     @JoinColumn(name = "user_id")
     private Collection<Event> createdEvents;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<Comment> comments;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "receiver_id")
+    private List<Message> receivedMessaged;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "sender_id")
+    private List<Message> sentMessaged;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<PropOrder> propOrders;
+
     //Participation
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_event_link",

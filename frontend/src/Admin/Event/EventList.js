@@ -10,6 +10,7 @@ import $ from "jquery"
 import Waiter from '../../Waiter.js';
 import Multiselect from 'multiselect-react-dropdown';
 import MoneyFormatter from '../../Formatter/MoneyFormatter.js';
+import { dispense } from "Localization/Dispenser";
 
 const roleAdmin = "ROLE_ADMIN"
 
@@ -227,20 +228,17 @@ class EventList extends Component {
 			<Button className="mb-3"
 				onClick={this.clearFilter}
 				color="outline-secondary">
-				Clear Filter
+				{dispense("clearFilter")}
 			</Button>
 
 			<div style={{ display: "flex", justifyContent: "space-between" }} className="mb-3">
 				{categoriesSelector}
-
-				{/* <Input onChange={this.handleCategoriesChange} value={this.state.categoriesNames}
-                    placeholder="Enter categories separated by comma" style={{ maxWidth: "25%" }}></Input> */}
 			</div>
 
 			<div style={{ display: "flex", justifyContent: "space-between" }} className="mb-3">
 
 				<Input onChange={this.handleChange} name="ownerLogin" value={this.state.ownerLogin}
-					placeholder="Owner Login" style={{ maxWidth: "20%", display: "inline" }}></Input>
+					placeholder={dispense("ownerLogin")} style={{ maxWidth: "20%", display: "inline" }}></Input>
 			</div>
 
 			<FormGroup className="mb-3">
@@ -249,25 +247,25 @@ class EventList extends Component {
 						eventState="WAITING_FOR_START"
 						variant={this.state.eventState === "WAITING_FOR_START" ? "success" : "outline-success"}
 						onClick={this.setEventState}>
-						Waiting
+						{dispense("waiting")}
 					</ToggleButton>
 					<ToggleButton
 						eventState="STARTED"
 						variant={this.state.eventState === "STARTED" ? "success" : "outline-success"}
 						onClick={this.setEventState}>
-						Started
+						{dispense("started")}
 					</ToggleButton>
 					<ToggleButton
 						eventState="FINISHED"
 						variant={this.state.eventState === "FINISHED" ? "success" : "outline-success"}
 						onClick={this.setEventState}>
-						Finished
+						{dispense("finished")}
 					</ToggleButton>
 					<ToggleButton
 						eventState="CLOSED"
 						variant={this.state.eventState == "CLOSED" ? "success" : "outline-success"}
 						onClick={this.setEventState}>
-						Closed
+						{dispense("closed")}
 					</ToggleButton>
 				</div>
 			</FormGroup>
@@ -278,25 +276,25 @@ class EventList extends Component {
 						sortField="name"
 						variant={this.state.sortField === "name" ? "success" : "outline-success"}
 						onClick={this.setSortField}>
-						Name
+						{dispense("name")}
 					</ToggleButton>
 					<ToggleButton
 						sortField="description"
 						variant={this.state.sortField === "description" ? "success" : "outline-success"}
 						onClick={this.setSortField}>
-						Description
+						{dispense("description")}
 					</ToggleButton>
 					<ToggleButton
 						sortField="startInstant"
 						variant={this.state.sortField === "startInstant" ? "success" : "outline-success"}
 						onClick={this.setSortField}>
-						Start Instant
+						{dispense("startInstant")}
 					</ToggleButton>
 					<ToggleButton
 						sortField="endInstant"
 						variant={this.state.sortField === "endInstant" ? "success" : "outline-success"}
 						onClick={this.setSortField}>
-						End Instant
+						{dispense("endInstant")}
 					</ToggleButton>
 				</div>
 
@@ -305,13 +303,13 @@ class EventList extends Component {
 						sortOrder="ASC"
 						variant={this.state.sortOrder === "ASC" ? "success" : "outline-success"}
 						onClick={this.setSortOrder}>
-						Ascend
+						{dispense("ascend")}
 					</ToggleButton>
 					<ToggleButton
 						sortOrder="DESC"
 						variant={this.state.sortOrder === "DESC" ? "success" : "outline-success"}
 						onClick={this.setSortOrder}>
-						Descend
+						{dispense("descend")}
 					</ToggleButton>
 				</div>
 			</FormGroup>
@@ -324,13 +322,13 @@ class EventList extends Component {
 							filterField="name"
 							variant={this.state.filterField === "name" ? "success" : "outline-success"}
 							onClick={this.setFilterValue}>
-							Name
+							{dispense("name")}
 						</ToggleButton>
 						<ToggleButton
 							filterField="description"
 							variant={this.state.filterField === "description" ? "success" : "outline-success"}
 							onClick={this.setFilterValue}>
-							Description
+							{dispense("description")}
 						</ToggleButton>
 					</div>
 
@@ -339,18 +337,18 @@ class EventList extends Component {
 							filterOperation="LIKE"
 							variant={this.state.filterOperation === "LIKE" ? "success" : "outline-success"}
 							onClick={this.setFilterOperation}>
-							Like
+							{dispense("like")}
 						</ToggleButton>
 						<ToggleButton
 							filterOperation="EQUAL"
 							variant={this.state.filterOperation === "EQUAL" ? "success" : "outline-success"}
 							onClick={this.setFilterOperation}>
-							Equal
+							{dispense("equal")}
 						</ToggleButton>
 					</div>
 
 					<Input onChange={this.handleChange} name="filterValue" value={this.state.filterValue} className="ms-3"
-						placeholder="Letters" style={{ maxWidth: "25%", display: "inline" }}></Input>
+						placeholder={dispense("letters")} style={{ maxWidth: "25%", display: "inline" }}></Input>
 				</div>
 			</FormGroup>
 		</Form >
@@ -382,31 +380,31 @@ class EventList extends Component {
 			var state
 			switch (event.eventState) {
 				case "WAITING_FOR_START":
-					state = <Badge className="bg-warning text-dark" style={{ minWidth: "100%" }}>Waiting</Badge>
+					state = <Badge className="bg-warning text-dark" style={{ minWidth: "100%" }}>{dispense("waiting")}</Badge>
 					break;
 				case "STARTED":
-					state = <Badge className="bg-success" style={{ minWidth: "100%" }}>Started</Badge>
+					state = <Badge className="bg-success" style={{ minWidth: "100%" }}>{dispense("started")}</Badge>
 					break;
 				case "FINISHED":
-					state = <Badge className="bg-danger" style={{ minWidth: "100%" }}>Finished</Badge>
+					state = <Badge className="bg-danger" style={{ minWidth: "100%" }}>{dispense("finished")}</Badge>
 					break;
 				case "CLOSED":
-					state = <Badge className="bg-dark" style={{ minWidth: "100%" }}>Closed</Badge>
+					state = <Badge className="bg-dark" style={{ minWidth: "100%" }}>{dispense("closed")}</Badge>
 					break;
 			}
 
 			return <tr key={event.id}>
 				<td style={{ whiteSpace: 'nowrap' }}><Link to={`/events/${event.id}`}>{event.name}</Link></td>
 				<td>{event.userLogin}</td>
-				<td>{MoneyFormatter.fromatDollars(event.price)}</td>
+				<td>{MoneyFormatter.format(event.price)}</td>
 				<td>{startInstant.toLocaleString('en-GB', { hour12: false })}</td>
 				<td>{endInstant.toLocaleString('en-GB', { hour12: false })}</td>
 				<td>{categories}</td>
 				<td>{state}</td>
 				<td>
 					<ButtonGroup style={{ minWidth: "100%" }}>
-						<Button style={{ minWidth: "50%" }} size="sm" color="success" tag={Link} to={"/event-management/events/" + event.id} >Edit</Button>
-						<Button style={{ minWidth: "50%" }} size="sm" color="danger" onClick={() => this.remove(event.id)}>Delete</Button>
+						<Button style={{ minWidth: "50%" }} size="sm" color="success" tag={Link} to={"/event-management/events/" + event.id} >{dispense("edit")}</Button>
+						<Button style={{ minWidth: "50%" }} size="sm" color="danger" onClick={() => this.remove(event.id)}>{dispense("delete")}</Button>
 					</ButtonGroup>
 				</td>
 			</tr>
@@ -433,14 +431,14 @@ class EventList extends Component {
 						<Table>
 							<thead>
 								<tr>
-									<th width="10%">Name</th>
-									<th width="7%">Owner login</th>
-									<th width="5%">Price</th>
-									<th width="10%">Start Instant</th>
-									<th width="10%">End Instant</th>
-									<th width="25%">Category</th>
-									<th width="10%">Event State</th>
-									<th width="20%">Operations</th>
+									<th width="10%">{dispense("title")}</th>
+									<th width="7%">{dispense("arranger")}</th>
+									<th width="5%">{dispense("price")}</th>
+									<th width="10%">{dispense("startAt")}</th>
+									<th width="10%">{dispense("finishAt")}</th>
+									<th width="25%">{dispense("categories")}</th>
+									<th width="10%">{dispense("state")}</th>
+									<th width="20%">{dispense("operations")}</th>
 								</tr>
 							</thead>
 							<tbody>

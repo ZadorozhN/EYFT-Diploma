@@ -5,11 +5,15 @@ import com.eyft.server.model.User;
 import com.eyft.server.repository.BalanceRepository;
 import com.eyft.server.service.BalanceService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
+import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BalanceServiceImpl implements BalanceService {
@@ -18,17 +22,25 @@ public class BalanceServiceImpl implements BalanceService {
 
     @Override
     public Balance getById(long id) {
-        return balanceRepository.getById(id);
+
+        return balanceRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
     public Balance getByUser(User user) {
-        return balanceRepository.getByUser(user);
+        Objects.requireNonNull(user);
+
+        return balanceRepository.findByUser(user)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
     public Balance getByAccountId(String accountId) {
-        return balanceRepository.getByAccountId(accountId);
+        Objects.requireNonNull(accountId);
+
+        return balanceRepository.findByAccountId(accountId)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -40,12 +52,25 @@ public class BalanceServiceImpl implements BalanceService {
 
     @Override
     @Transactional
-    public Balance handleDelta(String accountId, Long delta) {
-        Balance balance = balanceRepository.getByAccountId(accountId);
+    public Balance handleDelta(String accountId, long delta) {
+        Objects.requireNonNull(accountId);
 
-        long newBalance = balance.getCents() + delta;
-        balance.setCents(newBalance);
+        Balance balance = getBalanceByAccountId(accountId);
+        changeBalanceOnDelta(balance, delta);
 
         return balanceRepository.save(balance);
+    }
+
+    private Balance getBalanceByAccountId(String accountId){
+        return balanceRepository
+                .findByAccountId(accountId)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private void changeBalanceOnDelta(Balance balance, long delta) {
+        long newCents = balance.getCents() + delta;
+        log.info("Delta: {}; User: {}; Cents Before: {}; Cents After: {}", delta, balance.getUser().getLogin(),
+                balance.getCents(), newCents);
+        balance.setCents(newCents);
     }
 }

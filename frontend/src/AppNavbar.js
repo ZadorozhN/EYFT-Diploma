@@ -7,6 +7,7 @@ import ErrorHandler from './Handler/ErrorHandler';
 import axios from 'axios';
 import MoneyFormatter from './Formatter/MoneyFormatter';
 import Constants from './Const/Constants'
+import { dispense } from "Localization/Dispenser";
 
 var Stomp = require('stompjs');
 var SockJS = require("sockjs-client");
@@ -19,16 +20,24 @@ class AppNavbar extends Component {
     constructor(props) {
         super(props);
         let fm = localStorage.getItem("fastMode")
+
+        let langInit = localStorage.getItem("lang")
+        if(!langInit){
+            localStorage.setItem("lang", "ru")
+        }
+
         this.state = {
             isOpen: false,
             accountId: null,
             cents: null,
-            fastMode: JSON.parse(fm) === true
+            fastMode: JSON.parse(fm) === true,
+            lang: localStorage.getItem("lang")
         };
 
         this.toggle = this.toggle.bind(this);
         this.logout = this.logout.bind(this);
         this.toggleFastMode = this.toggleFastMode.bind(this);
+        this.toggleLanguage = this.toggleLanguage.bind(this);
     }
 
     toggleFastMode() {
@@ -36,6 +45,20 @@ class AppNavbar extends Component {
         localStorage.setItem("fastMode", !this.state.fastMode)
         this.setState({ fastMode: !this.state.fastMode })
     }
+    
+    toggleLanguage() {
+        let newLang
+
+        if(this.state.lang == "en"){
+            newLang = "ru"
+        } else {
+            newLang = "en"
+        }
+
+        localStorage.setItem("lang", newLang)
+        window.location.reload()
+    }
+
 
     logout() {
         localStorage.removeItem("accessToken")
@@ -57,7 +80,7 @@ class AppNavbar extends Component {
         let navItems;
 
         <h4>
-            <span class="badge bg-success">{MoneyFormatter.fromatDollars(this.state.cents)}</span>
+            <span class="badge bg-success">{MoneyFormatter.format(this.state.cents)}</span>
         </h4>
 
         let nav;
@@ -67,12 +90,12 @@ class AppNavbar extends Component {
                 style={{ maxHeight: '100px' }}
                 navbarScroll
             >
-                {localStorage.getItem("role") == null ? <Nav.Link href="/auth">Auth</Nav.Link> : ""}
-                {localStorage.getItem("role") == null ? <Nav.Link href="/registration">Registration</Nav.Link> : ""}
-                {localStorage.getItem("role") != null ? <Nav.Link href="/me">Me</Nav.Link> : ""}
-                {Constants.isArrangerOrHigher(localStorage.getItem("role")) ? <Nav.Link href="/arranger">Arranger</Nav.Link> : ""}
-                {Constants.isAdmin(localStorage.getItem("role")) ? <Nav.Link href="/admin">Admin</Nav.Link> : ""}
-                {localStorage.getItem("role") != null ? <Nav.Link href="/auth" onClick={this.logout}>Logout</Nav.Link> : ""}
+                {localStorage.getItem("role") == null ? <Nav.Link href="/auth">{dispense("login")}</Nav.Link> : ""}
+                {localStorage.getItem("role") == null ? <Nav.Link href="/registration">{dispense("registration")}</Nav.Link> : ""}
+                {localStorage.getItem("role") != null ? <Nav.Link href="/me">{dispense("personalPage")}</Nav.Link> : ""}
+                {Constants.isArrangerOrHigher(localStorage.getItem("role")) ? <Nav.Link href="/arranger">{dispense("arranger")}</Nav.Link> : ""}
+                {Constants.isAdmin(localStorage.getItem("role")) ? <Nav.Link href="/admin">{dispense("admin")}</Nav.Link> : ""}
+                {localStorage.getItem("role") != null ? <Nav.Link href="/auth" onClick={this.logout}>{dispense("logout")}</Nav.Link> : ""}
             </Nav>
         } else {
             nav = <Nav
@@ -81,56 +104,58 @@ class AppNavbar extends Component {
                 navbarScroll
             >
 
-                {localStorage.getItem("role") == null ? <Nav.Link href="/auth">Auth</Nav.Link> : ""}
-                {localStorage.getItem("role") == null ? <Nav.Link href="/registration">Registration</Nav.Link> : ""}
+                {localStorage.getItem("role") == null ? <Nav.Link href="/auth">{dispense("login")}</Nav.Link> : ""}
+                {localStorage.getItem("role") == null ? <Nav.Link href="/registration">{dispense("registration")}</Nav.Link> : ""}
                 {localStorage.getItem("role") != null ?
-                    <NavDropdown title="Me" id="navbarScrollingDropdown">
-                        <NavDropdown.Item href="/me">Console</NavDropdown.Item>
+                    <NavDropdown title="Личная страница" id="navbarScrollingDropdown">
+                        <NavDropdown.Item href="/me">{dispense("console")}</NavDropdown.Item>
                         <NavDropdown.Divider />
-                        <NavDropdown.Item href="/me/events">Events</NavDropdown.Item>
-                        <NavDropdown.Item href="/me/joined">Joined Events</NavDropdown.Item>
+                        <NavDropdown.Item href="/me/events">{dispense("events")}</NavDropdown.Item>
+                        <NavDropdown.Item href="/me/joined">{dispense("participationInEvents")}</NavDropdown.Item>
                         <NavDropdown.Divider />
-                        <NavDropdown.Item href="/me/messenger">Messenger</NavDropdown.Item>
-                        <NavDropdown.Item href="/me/photos">Photos</NavDropdown.Item>
+                        <NavDropdown.Item href="/me/messenger">{dispense("messenger")}</NavDropdown.Item>
+                        <NavDropdown.Item href="/me/photos">{dispense("photos")}</NavDropdown.Item>
                         <NavDropdown.Divider />
-                        <NavDropdown.Item href="/me/settings">Settings</NavDropdown.Item>
+                        <NavDropdown.Item href="/me/settings">{dispense("settings")}</NavDropdown.Item>
                     </NavDropdown> : ""}
-                {Constants.isArrangerOrHigher(localStorage.getItem("role")) ? <NavDropdown title="Arranger" id="navbarScrollingDropdown">
-                    <NavDropdown.Item href="/arranger">Console</NavDropdown.Item>
+                {Constants.isArrangerOrHigher(localStorage.getItem("role")) ? <NavDropdown title={dispense("arranger")} id="navbarScrollingDropdown">
+                    <NavDropdown.Item href="/arranger">{dispense("console")}</NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="/arranger/arranged">Arranged Events</NavDropdown.Item>
-                    <NavDropdown.Item href="/arranger/arrangement">Event Arrangement</NavDropdown.Item>
+                    <NavDropdown.Item href="/arranger/arranged">{dispense("arrangedEvents")}</NavDropdown.Item>
+                    <NavDropdown.Item href="/arranger/arrangement">{dispense("arrangeEvent")}</NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="/arranger/props/market">Props Market</NavDropdown.Item>
-                    <NavDropdown.Item href="/arranger/props/ordered">Ordered Props</NavDropdown.Item>
+                    <NavDropdown.Item href="/arranger/props/market">{dispense("orderProp")}</NavDropdown.Item>
+                    <NavDropdown.Item href="/arranger/props/ordered">{dispense("orderedProps")}</NavDropdown.Item>
                 </NavDropdown> : ""}
-                {Constants.isAdmin(localStorage.getItem("role")) ? <NavDropdown title="Admin" id="navbarScrollingDropdown">
-                    <NavDropdown.Item href="/admin">Console</NavDropdown.Item>
+                {Constants.isAdmin(localStorage.getItem("role")) ? <NavDropdown title={dispense("admin")} id="navbarScrollingDropdown">
+                    <NavDropdown.Item href="/admin">{dispense("console")}</NavDropdown.Item>
                     <NavDropdown.Divider />
-                    <NavDropdown.Item href="/event-management/events">Events</NavDropdown.Item>
-                    <NavDropdown.Item href="/category-management/categories">Categories</NavDropdown.Item>
-                    <NavDropdown.Item href="/user-management/users">Users</NavDropdown.Item>
-                    <NavDropdown.Item href="/prop-management/props">Props</NavDropdown.Item>
-                    <NavDropdown.Item href="/prop-management/propOrders">Prop Orders</NavDropdown.Item>
+                    <NavDropdown.Item href="/event-management/events">{dispense("events")}</NavDropdown.Item>
+                    <NavDropdown.Item href="/category-management/categories">{dispense("categories")}</NavDropdown.Item>
+                    <NavDropdown.Item href="/user-management/users">{dispense("users")}</NavDropdown.Item>
+                    <NavDropdown.Item href="/prop-management/props">{dispense("props")}</NavDropdown.Item>
+                    <NavDropdown.Item href="/prop-management/propOrders">{dispense("propOrders")}</NavDropdown.Item>
                 </NavDropdown> : ""}
-                {localStorage.getItem("role") != null ? <Nav.Link href="/auth" onClick={this.logout}>Logout</Nav.Link> : ""}
+                {localStorage.getItem("role") != null ? <Nav.Link href="/auth" onClick={this.logout}>{dispense("logout")}</Nav.Link> : ""}
             </Nav>
         }
 
         return <Navbar bg="dark" variant="dark" expand="md">
             <Container fluid style={{ marginTop: "0px" }}>
-                <Navbar.Brand href="/">EYFT</Navbar.Brand>
+                <Navbar.Brand href="/">{dispense("logo")}</Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll" />
                 <Navbar.Collapse id="navbarScroll">
                     {nav}
-                    {localStorage.getItem("role") != null ? <h4>
-                        <a href='/card'>
-                            <span class="badge bg-success">{MoneyFormatter.fromatDollars(this.state.cents)}</span>
-                        </a>
-                    </h4> : ""}
+                    {localStorage.getItem("role") != null ?
+                            <Button variant="outline-success" href='/card'>{MoneyFormatter.format(this.state.cents)}</Button>
+                    : ""}
                     <Button variant={this.state.fastMode ? "success" : "outline-success"}
-                        className="mx-3" onClick={this.toggleFastMode}>
-                        Fast Mode
+                        className="mx-1" onClick={this.toggleFastMode}>
+                        {dispense("fastMode")}
+                    </Button>
+                    <Button variant={this.state.lang == "en" ? "success" : "outline-success"}
+                        onClick={this.toggleLanguage}>
+                        {dispense("language-locale")}
                     </Button>
                 </Navbar.Collapse>
             </Container>
@@ -154,7 +179,7 @@ class AppNavbar extends Component {
                 localStorage.setItem("accountId", res.data.accountId)
                 localStorage.setItem("cents", res.data.cents)
             }).catch((err) => {
-                ErrorHandler.runStringMessage("Can't receive balance")
+                ErrorHandler.runStringMessage(dispense("cantReceiveBalance"))
             })
         }
 

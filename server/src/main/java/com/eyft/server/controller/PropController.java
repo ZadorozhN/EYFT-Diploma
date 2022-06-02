@@ -24,11 +24,9 @@ public class PropController {
 
     @GetMapping
     public PropsOutDto getAllProps(){
-        List<PropOutDto> propOutDtoList = propService.getAllProps().stream()
-                .map(propMapper::fillPropOutDto)
-                .collect(Collectors.toList());
+        List<Prop> props = propService.getAllProps();
 
-        return new PropsOutDto(propOutDtoList);
+        return propMapper.fillPropOutDtos(props);
     }
 
     @GetMapping("/{id}")

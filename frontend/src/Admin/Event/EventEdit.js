@@ -3,12 +3,12 @@ import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Input, Label, InputGroup, Row, Col } from 'reactstrap';
 import AppNavbar from '../../AppNavbar';
 import DatePicker from 'react-datetime';
-import moment from 'moment';
 import 'react-datetime/css/react-datetime.css';
 import $ from 'jquery';
 import ErrorHandler from '../../Handler/ErrorHandler';
 import ErrorNotifier from '../../Handler/ErrorNotifier';
 import Multiselect from 'multiselect-react-dropdown';
+import {dispense} from 'Localization/Dispenser'
 
 const roleAdmin = "ROLE_ADMIN"
 
@@ -175,42 +175,42 @@ class EventEdit extends Component {
             <Container>
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup className="mt-3">
-                        <Label for="name">Name</Label>
+                        <Label for="name">{dispense("title")}</Label>
                         <Input type="text" name="name" id="name" value={ev.name || ''}
                             onChange={this.handleChange} autoComplete="name" />
                     </FormGroup>
                     <FormGroup className="mt-3">
-                        <Label for="description">Description</Label>
+                        <Label for="description">{dispense("description")}</Label>
                         <Input type="text" name="description" id="description" value={ev.description || ''}
                             onChange={this.handleChange} autoComplete="description" />
                     </FormGroup>
                     <FormGroup className="mt-3">
-                        <Label for="place">Place</Label>
+                        <Label for="place">{dispense("place")}</Label>
                         <Input type="text" name="place" id="place" value={ev.place || ''}
                             onChange={this.handleChange} autoComplete="place" />
                     </FormGroup>
                     <FormGroup className="mt-3">
-                        <Label for="price">Price in Cents</Label>
+                        <Label for="price">{dispense("priceInCents")}</Label>
                         <Input type="text" name="price" id="price" value={ev.price || ''}
                             onChange={this.handleChange} autoComplete="place" />
                     </FormGroup>
                     <FormGroup className="mt-3">
-                        <Button onClick={this.handleChange} className="me-3" name="eventState" value='WAITING_FOR_START' color={ev.eventState == "WAITING_FOR_START" ? "warning" : "outline-warning text-dark"} >Waiting</Button>
-                        <Button onClick={this.handleChange} className="me-3" name="eventState" value='STARTED' color={ev.eventState == "STARTED" ? "success" : "outline-success"} >Started</Button>
-                        <Button onClick={this.handleChange} className="me-3" name="eventState" value='FINISHED' color={ev.eventState == "FINISHED" ? "danger" : "outline-danger"} >Finished</Button>
-                        <Button onClick={this.handleChange} className="me-3" name="eventState" value='CLOSED' color={ev.eventState == "CLOSED" ? "dark" : "outline-dark"} >Closed</Button>
+                        <Button onClick={this.handleChange} className="me-3" name="eventState" value='WAITING_FOR_START' color={ev.eventState == "WAITING_FOR_START" ? "warning" : "outline-warning text-dark"} >{dispense("waiting")}</Button>
+                        <Button onClick={this.handleChange} className="me-3" name="eventState" value='STARTED' color={ev.eventState == "STARTED" ? "success" : "outline-success"} >{dispense("started")}</Button>
+                        <Button onClick={this.handleChange} className="me-3" name="eventState" value='FINISHED' color={ev.eventState == "FINISHED" ? "danger" : "outline-danger"} >{dispense("finished")}</Button>
+                        <Button onClick={this.handleChange} className="me-3" name="eventState" value='CLOSED' color={ev.eventState == "CLOSED" ? "dark" : "outline-dark"} >{dispense("closed")}</Button>
                     </FormGroup>
                     <Row>
                         <Col md="6">
                             <FormGroup className="mt-3">
                                 <div>
-                                    <Label>Categories</Label>
+                                    <Label>{dispense("categories")}</Label>
                                     <Multiselect
-                                        options={this.state.categories} // Options to display in the dropdown
-                                        selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
-                                        onSelect={this.onSelect} // Function will trigger on select event
-                                        onRemove={this.onRemove} // Function will trigger on remove event
-                                        displayValue="name"  // Property name to display in the dropdown options
+                                        options={this.state.categories}
+                                        selectedValues={this.state.selectedValue}
+                                        onSelect={this.onSelect}
+                                        onRemove={this.onRemove}
+                                        displayValue="name"
                                     />
                                 </div>
                             </FormGroup>
@@ -218,7 +218,7 @@ class EventEdit extends Component {
                         <Col>
                             <FormGroup className="mt-3">
                                 <InputGroup style={{ "display": "flex", justifyContent: "right" }}>
-                                    <Label for="startInstant">Starts at</Label>
+                                    <Label for="startInstant">{dispense("startAt")}</Label>
                                     <DatePicker className='ms-5'
                                         value={this.state.event.startInstant}
                                         name="startInstant"
@@ -230,7 +230,7 @@ class EventEdit extends Component {
                             </FormGroup>
                             <FormGroup className="mt-3">
                                 <InputGroup style={{ "display": "flex", justifyContent: "right" }}>
-                                    <Label for="endInstant">Finishes at</Label>
+                                    <Label for="endInstant">{dispense("finishAt")}</Label>
                                     <DatePicker className='ms-5'
                                         value={this.state.event.endInstant}
                                         name="endInstant"
@@ -244,8 +244,8 @@ class EventEdit extends Component {
                         </Col>
                     </Row>
                     <FormGroup className="mt-3" style={{ minWidth: "100%", display: "flex", justifyContent: "space-between" }}>
-                        <Button color="success" type="submit" style={{ minWidth: "48%" }}>Save</Button>{' '}
-                        <Button color="secondary" tag={Link} to="/event-management/events" style={{ minWidth: "48%" }}>Cancel</Button>
+                        <Button color="success" type="submit" style={{ minWidth: "48%" }}>{dispense("save")}</Button>{' '}
+                        <Button color="secondary" tag={Link} to="/event-management/events" style={{ minWidth: "48%" }}>{dispense("cancel")}</Button>
                     </FormGroup>
                 </Form>
             </Container>

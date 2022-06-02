@@ -24,4 +24,9 @@ public class Category {
 
     @ManyToMany(mappedBy = "categories")
     private Collection<Event> events;
+
+    @Override
+    public String toString(){
+        return name;
+    }
 }

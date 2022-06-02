@@ -7,6 +7,7 @@ import $ from 'jquery';
 import ErrorHandler from '../../Handler/ErrorHandler';
 import ErrorNotifier from '../../Handler/ErrorNotifier';
 import Constants from '../../Const/Constants';
+import { dispense } from "Localization/Dispenser";
 
 const address = ""
 
@@ -48,7 +49,7 @@ class GuestMePage extends Component {
         const { user, isLoading } = this.state;
 
         if (isLoading) {
-            return <p>Loading...</p>;
+            return <p>{dispense("loading...")}</p>;
         }
 
         const avatar = user.avatar !== null ? <Card >

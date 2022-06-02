@@ -136,7 +136,7 @@ class EventPage extends Component {
         const comments = this.state.comments.map(comment => {
             return <div class="border-bottom p-2">
                 <div>
-                    <span class="text-secondary me-1">{comment.user.login} at</span>
+                    <span class="text-secondary me-1">{comment.user.login} в</span>
                     <span class="text-secondary">{InstantFormatter.formatInstant(comment.creationTime)}</span>
                 </div>
                 <div>
@@ -163,7 +163,7 @@ class EventPage extends Component {
                                         className={classnames({ active: this.state.activeTab === '1' })}
                                         onClick={() => { this.toggle('1'); }}
                                     >
-                                        Information 📊
+                                        Информация 📊
                                     </NavLink>
                                 </NavItem>
                                 <NavItem>
@@ -171,7 +171,7 @@ class EventPage extends Component {
                                         className={classnames({ active: this.state.activeTab === '2' })}
                                         onClick={() => { this.toggle('2'); }}
                                     >
-                                        Comments 💬
+                                        Комментарии 💬
                                     </NavLink>
                                 </NavItem>
                                 <NavItem>
@@ -179,7 +179,7 @@ class EventPage extends Component {
                                         className={classnames({ active: this.state.activeTab === '3' })}
                                         onClick={() => { this.toggle('3'); }}
                                     >
-                                        Photos 📷
+                                        Фотографии 📷
                                     </NavLink>
                                 </NavItem>
                             </Nav>
@@ -223,16 +223,16 @@ class EventPage extends Component {
         var state
         switch (event.eventState) {
             case "WAITING_FOR_START":
-                state = <Badge className="bg-warning text-dark" style={{ minWidth: "100%" }}>Waiting</Badge>
+                state = <Badge className="bg-warning text-dark" style={{ minWidth: "100%" }}>Ожидание</Badge>
                 break;
             case "STARTED":
-                state = <Badge className="bg-success" style={{ minWidth: "100%" }}>Started</Badge>
+                state = <Badge className="bg-success" style={{ minWidth: "100%" }}>Началось</Badge>
                 break;
             case "FINISHED":
-                state = <Badge className="bg-danger" style={{ minWidth: "100%" }}>Finished</Badge>
+                state = <Badge className="bg-danger" style={{ minWidth: "100%" }}>Завершилось</Badge>
                 break;
             case "CLOSED":
-                state = <Badge className="bg-dark" style={{ minWidth: "100%" }}>Closed</Badge>
+                state = <Badge className="bg-dark" style={{ minWidth: "100%" }}>Закрыто</Badge>
                 break;
         }
 
@@ -245,13 +245,13 @@ class EventPage extends Component {
                     {categories}
                 </h5>
             </div>
-            <div>Arranged by {arranger} nearby {event.place}</div>
+            <div>Организовано {arranger} в {event.place}</div>
             <div>{participantMessage}</div>
             <div>
-                Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
+                Начало в {startInstant.toLocaleString('en-GB', { hour12: false })}
             </div>
             <div>
-                Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
+                Завершение в {endInstant.toLocaleString('en-GB', { hour12: false })}
             </div>
             <div>
                 <h5>
@@ -267,8 +267,8 @@ class EventPage extends Component {
             <div>
                 {localStorage.getItem("login") == null ? "" :
                     <InputGroup className="my-1">
-                        <Input placeholder='Leave a comment' onChange={this.changeCommentText} value={this.state.commentText} />
-                        <Button onClick={this.leaveComment} color='success'>Send</Button>
+                        <Input placeholder='Комментарий' onChange={this.changeCommentText} value={this.state.commentText} />
+                        <Button onClick={this.leaveComment} color='success'>Отправить</Button>
                     </InputGroup>
                 }
             </div>

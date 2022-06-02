@@ -3,18 +3,16 @@ package com.eyft.server.service.impl;
 import com.eyft.server.exception.EventDoesNotExistException;
 import com.eyft.server.exception.IllegalEventStateChangeException;
 import com.eyft.server.exception.PhotoDoesNotBelongToEventException;
-import com.eyft.server.model.Event;
-import com.eyft.server.model.EventState;
-import com.eyft.server.model.Photo;
+import com.eyft.server.model.*;
 import com.eyft.server.repository.EventRepository;
 import com.eyft.server.repository.PhotoRepository;
-import com.eyft.server.service.EventService;
-import com.eyft.server.service.MoneyHandler;
+import com.eyft.server.service.*;
 import com.eyft.server.service.specification.EventSpecification;
 import com.eyft.server.service.specification.Operation;
 import com.eyft.server.service.specification.SearchCriteria;
 import com.eyft.server.util.EventUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,9 +29,16 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
+    private final BalanceService balanceService;
     private final PhotoRepository photoRepository;
+    private final UserService userService;
     private final EventUtil eventUtil;
     private final MoneyHandler moneyHandler;
+
+    private Set<Long> payedEvents = ConcurrentHashMap.newKeySet();
+
+    @Value("#{${payment.fee.percents} >= 0 ? (${payment.fee.percents} <= 100 ? ${payment.fee.percents} : 100) : 0}")
+    private int paymentFeeInPercents;
 
     @Override
     @Transactional(readOnly = true)
@@ -123,6 +130,7 @@ public class EventServiceImpl implements EventService {
 
         event.setEventState(EventState.STARTED);
 
+
         eventRepository.save(event);
     }
 
@@ -162,6 +170,33 @@ public class EventServiceImpl implements EventService {
         event.setEventState(EventState.CLOSED);
 
         eventRepository.save(event);
+
+        synchronized (id) {
+            if (!payedEvents.contains(id)) {
+                payedEvents.add(id);
+                payToArranger(event);
+            }
+        }
+    }
+
+    private void payToArranger(Event event) {
+        int amountOfParticipants = event.getUsers().size();
+        long eventPrice = event.getPrice();
+        String arrangerBalanceAccountId = event.getUser().getBalance().getAccountId();
+
+        long totalIncome = eventPrice * amountOfParticipants;
+
+        long onePercentIncome = totalIncome / 100;
+
+        long fee = onePercentIncome * paymentFeeInPercents;
+
+        long totalArrangerIncome = totalIncome - fee;
+
+        User master = userService.getByLogin("master");
+        String systemAccountId = balanceService.getByUser(master).getAccountId();
+
+        moneyHandler.handleRequest(arrangerBalanceAccountId, totalArrangerIncome);
+        moneyHandler.handleRequest(systemAccountId, fee);
     }
 
     private Sort buildSort(String sortField, String sortOrder){

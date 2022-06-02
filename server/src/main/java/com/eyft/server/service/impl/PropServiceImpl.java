@@ -8,6 +8,7 @@ import com.eyft.server.model.*;
 import com.eyft.server.model.mapper.PropMapper;
 import com.eyft.server.repository.PropOrderRepository;
 import com.eyft.server.repository.PropRepository;
+import com.eyft.server.service.BalanceService;
 import com.eyft.server.service.MoneyHandler;
 import com.eyft.server.service.PropService;
 import com.eyft.server.service.UserService;
@@ -20,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +34,9 @@ public class PropServiceImpl implements PropService {
     private final PropOrderRepository propOrderRepository;
     private final UserService userService;
     private final PropMapper propMapper;
+    private final BalanceService balanceService;
+
+    private Set<Long> payedPropOrders = ConcurrentHashMap.newKeySet();
 
     @Override
     @Transactional(readOnly = true)
@@ -40,6 +46,7 @@ public class PropServiceImpl implements PropService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PropOrder getPropOrderById(Long id) {
         return propOrderRepository.findById(id)
                 .orElseThrow(() -> new CustomInternalApplicationException("Prop does not exist"));
@@ -185,9 +192,10 @@ public class PropServiceImpl implements PropService {
         propOrderRepository.delete(propOrder);
 
         String accountId = user.getBalance().getAccountId();
-        if(propOrder.getStatus() != PropOrderStatus.DELIVERED) {
-            moneyHandler.handleRequest(accountId, +propOrder.getCost());
-        };
+            if (propOrder.getStatus() != PropOrderStatus.DELIVERED) {
+                moneyHandler.handleRequest(accountId, +propOrder.getCost());
+            }
+            ;
     }
 
     @Override
@@ -198,10 +206,11 @@ public class PropServiceImpl implements PropService {
         propOrderRepository.delete(propOrder);
 
         String accountId = user.getBalance().getAccountId();
+                if (propOrder.getStatus() != PropOrderStatus.DELIVERED) {
+                    moneyHandler.handleRequest(accountId, +propOrder.getCost());
+                };
+            
 
-        if(propOrder.getStatus() != PropOrderStatus.DELIVERED) {
-            moneyHandler.handleRequest(accountId, +propOrder.getCost());
-        };
     }
 
     @Override
@@ -216,7 +225,20 @@ public class PropServiceImpl implements PropService {
         propOrder.setAnswer(propOrderChangingInDto.getMessage());
         propOrder.setStatus(propOrderChangingInDto.getStatus());
 
+        if(propOrderChangingInDto.getStatus() == PropOrderStatus.DELIVERED) {
+            if(!payedPropOrders.contains(id)) {
+                payedPropOrders.add(id);
+                payToMaster(propOrder.getCost());
+            }
+        }
+
         propOrderRepository.save(propOrder);
+    }
+
+    private void payToMaster(long cents) {
+        User master = userService.getByLogin("master");
+        String systemAccountId = balanceService.getByUser(master).getAccountId();
+        moneyHandler.handleRequest(systemAccountId, cents);
     }
 
     @SneakyThrows

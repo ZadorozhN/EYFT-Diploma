@@ -11,6 +11,7 @@ import ErrorHandler from '../Handler/ErrorHandler';
 import ErrorNotifier from '../Handler/ErrorNotifier';
 import Constants from '../Const/Constants';
 import Multiselect from 'multiselect-react-dropdown';
+import {dispense} from "Localization/Dispenser.js"
 
 const roleAdmin = "ROLE_ADMIN"
 
@@ -162,17 +163,17 @@ class ArrangedEventPage extends Component {
             <Container>
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup className="mt-3">
-                        <Label for="name">Name</Label>
+                        <Label for="name">{dispense("title")}</Label>
                         <Input type="text" name="name" id="name" value={event.name || ''}
                             onChange={this.handleChange} autoComplete="event" />
                     </FormGroup>
                     <FormGroup className="mt-3">
-                        <Label for="description">Description</Label>
+                        <Label for="description">{dispense("description")}</Label>
                         <Input type="text" name="description" id="description" value={event.description || ''}
                             onChange={this.handleChange} autoComplete="description" />
                     </FormGroup>
                     <FormGroup className="mt-3">
-                        <Label for="place">Place</Label>
+                        <Label for="place">{dispense("place")}</Label>
                         <Input type="text" name="place" id="place" value={event.place || ''}
                             onChange={this.handleChange} autoComplete="place" />
                     </FormGroup>
@@ -180,7 +181,7 @@ class ArrangedEventPage extends Component {
                         <Col md="6">
                             <FormGroup className="mt-3">
                                 <div>
-                                    <Label>Categories</Label>
+                                    <Label>{dispense("categories")}</Label>
                                     <Multiselect
                                         options={this.state.categories} // Options to display in the dropdown
                                         selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
@@ -194,7 +195,7 @@ class ArrangedEventPage extends Component {
                         <Col>
                             <FormGroup className="mt-3">
                                 <InputGroup style={{ "display": "flex", justifyContent: "right" }}>
-                                    <Label for="startInstant">Starts at</Label>
+                                    <Label for="startInstant">{dispense("startAt")}</Label>
                                     <DatePicker className='ms-5'
                                         value={this.state.event.startInstant}
                                         name="startInstant"
@@ -206,7 +207,7 @@ class ArrangedEventPage extends Component {
                             </FormGroup>
                             <FormGroup className="mt-3">
                                 <InputGroup style={{ "display": "flex", justifyContent: "right" }}>
-                                    <Label for="endInstant">Finishes at</Label>
+                                    <Label for="endInstant">{dispense("finishAt")}</Label>
                                     <DatePicker className='ms-5'
                                         value={this.state.event.endInstant}
                                         name="endInstant"
@@ -220,8 +221,8 @@ class ArrangedEventPage extends Component {
                         </Col>
                     </Row>
                     <FormGroup className="mt-3" style={{minWidth:"100%", display:"flex", justifyContent:"space-between"}}>
-                        <Button color="success" type="submit" style={{minWidth:"48%"}}>Save</Button>{' '}
-                        <Button color="secondary" tag={Link} to="/arranger/arranged" style={{minWidth:"48%"}}>Cancel</Button>
+                        <Button color="success" type="submit" style={{minWidth:"48%"}}>{dispense("save")}</Button>{' '}
+                        <Button color="secondary" tag={Link} to="/arranger/arranged" style={{minWidth:"48%"}}>{dispense("cancel")}</Button>
                     </FormGroup>
                 </Form>
             </Container>

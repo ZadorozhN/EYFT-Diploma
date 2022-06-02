@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import {Badge, Button} from 'react-bootstrap';
-import MeEventsToJoin from './MeEventsToJoin';
+import EventsToJoin from './EventsToJoin';
 import {Container} from 'react-bootstrap'
 import $ from 'jquery';
 import AppNavbar from '../AppNavbar';
@@ -24,7 +24,7 @@ class JoinEvents extends Component {
             <div>
                 <AppNavbar/>
                 <Container fluid>
-                    <MeEventsToJoin/>
+                    <EventsToJoin/>
                 </Container>
                 <ErrorNotifier/>
             </div>

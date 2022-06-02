@@ -3,9 +3,11 @@ package com.eyft.server.service.impl;
 import com.eyft.server.exception.CustomInternalApplicationException;
 import com.eyft.server.exception.InvalidEmailException;
 import com.eyft.server.exception.PhotoDoesNotBelongToEventException;
+import com.eyft.server.exception.UserDoesNotExistException;
 import com.eyft.server.exception.validation.CommonValidationException;
 import com.eyft.server.model.*;
 import com.eyft.server.repository.UserRepository;
+import com.eyft.server.service.MailService;
 import com.eyft.server.service.MoneyHandler;
 import com.eyft.server.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Transactional
@@ -55,6 +59,12 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Optional<User> findByLogin(String login) {
         return userRepository.findByLogin(login);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -159,7 +169,9 @@ public class UserServiceImpl implements UserService {
         if (balance.getCents() < event.getPrice()) {
             throw new CustomInternalApplicationException("Not enough amount of money");
         }
+
         moneyHandler.handleRequest(balance.getAccountId(), -event.getPrice());
+
         user.getEvents().add(event);
         save(user);
 
@@ -181,6 +193,11 @@ public class UserServiceImpl implements UserService {
 
         user.getEvents().remove(event);
         save(user);
+    }
+
+    @Override
+    public User getByLogin(String login) {
+        return userRepository.findByLogin(login).orElseThrow(UserDoesNotExistException::new);
     }
 
     private void checkEmail(User user){

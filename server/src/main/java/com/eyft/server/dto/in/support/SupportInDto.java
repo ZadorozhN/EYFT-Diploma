@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SupportInDto {
-    private String login;
+    private String email;
     private String type;
 }

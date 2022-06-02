@@ -8,6 +8,7 @@ import ErrorHandler from '../Handler/ErrorHandler';
 import ErrorNotifier from '../Handler/ErrorNotifier';
 import Constants from '../Const/Constants';
 import Waiter from '../Waiter';
+import { dispense } from "Localization/Dispenser";
 
 const address = ""
 
@@ -131,7 +132,7 @@ class MyPhotos extends Component {
 
         console.log(Boolean(this.state.login))
         if (this.state.login == null || this.state.role == null || this.state.id == null) {
-            return <div><h1>Unauthorized</h1></div>
+            return <div><h1>{dispense("unauthorized")}</h1></div>
         }
 
         console.log(this.state.user)
@@ -140,8 +141,9 @@ class MyPhotos extends Component {
             return <Card border="light">
                 <Card.Img src={"/resources/users/" + this.state.user.id + "/photos/" + photo.id} />
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    {this.state.user.avatar.id == photo.id ? <span className='mt-3 border-bottom border-success' style={{ minWidth: "79%" }}>Current Avatar</span> :
-                        <Button onClick={this.setAvatar} photoId={photo.id} variant="outline-success" className="mt-1" style={{ minWidth: "79%" }}>Set as Avatar</Button>
+                    
+                    {this.state.user.avatar != null && this.state.user.avatar.id == photo.id ? <span className='mt-3 border-bottom border-success' style={{ minWidth: "79%" }}>{dispense("currentAvatar")}</span> :
+                        <Button onClick={this.setAvatar} photoId={photo.id} variant="outline-success" className="mt-1" style={{ minWidth: "79%" }}>{dispense("setAsAvatar")}</Button>
                     }
                     <Button onClick={this.removePhoto} photoId={photo.id} variant="outline-danger" className="mt-1" style={{ minWidth: "20%" }}>❌</Button>
                 </div>
@@ -159,7 +161,7 @@ class MyPhotos extends Component {
                 <div className='p-3'>
                     <div>
                         <Input color="primary" type="file" name="image" id={"userImages"} multiple />
-                        <Button onClick={this.upload} variant="success"> Upload</Button>
+                        <Button onClick={this.upload} variant="success">{dispense("upload")}</Button>
                     </div>
                     <Row xs={1} md={4} className="mt-2 g-4">
                         {photosList}

@@ -7,6 +7,7 @@ import ErrorHandler from '../../Handler/ErrorHandler'
 import ErrorNotifier from '../../Handler/ErrorNotifier'
 import MoneyFormatter from '../../Formatter/MoneyFormatter'
 import Waiter from '../../Waiter'
+import {dispense} from "Localization/Dispenser.js"
 
 let thisObj
 
@@ -95,7 +96,7 @@ class MyProps extends React.Component {
             this.setState({ propOrders: updatedPropOrders }, () => this.filterPropOrders())
             ErrorHandler.runSuccess(res.data)
         }).catch((err) => {
-            ErrorHandler.runStringMessage("Already deleted")
+            ErrorHandler.runStringMessage(dispense("alreadyDeleted"))
         })
     }
 
@@ -122,24 +123,24 @@ class MyProps extends React.Component {
 
             let status = null;
             if (propOrder.status == "ORDERED") {
-                status = <span style={{ minWidth: "100%" }} class="badge bg-warning text-dark">Ordered</span>
+                status = <span style={{ minWidth: "100%" }} class="badge bg-warning text-dark">{dispense("ordered")}</span>
             }
             if (propOrder.status == "ACCEPTED") {
-                status = <span style={{ minWidth: "100%" }} class="badge bg-success">Accepted</span>
+                status = <span style={{ minWidth: "100%" }} class="badge bg-success">{dispense("accepted")}</span>
             }
             if (propOrder.status == "DELIVERED") {
-                status = <span style={{ minWidth: "100%" }} class="badge bg-secondary">Delivered</span>
+                status = <span style={{ minWidth: "100%" }} class="badge bg-secondary">{dispense("delivered")}</span>
             }
 
             if (this.state.infoMode) {
                 return <tr>
                     <td>{propOrder.prop.name}</td>
                     <td>{costType == "DAY" ? date : pieces}</td>
-                    <td>{MoneyFormatter.fromatDollars(propOrder.cost)}</td>
+                    <td>{MoneyFormatter.format(propOrder.cost)}</td>
                     <td>{status}</td>
                     <td><Button color="danger" propOrderId={propOrder.id} onClick={() => this.cancelBook(propOrder.id)}
                         disabled={propOrder.status != "ORDERED"} style={{ minWidth: "100%" }}>
-                        Cancel booking
+                        {dispense("cancelOrder")}
                     </Button></td>
                 </tr>
             }
@@ -149,7 +150,7 @@ class MyProps extends React.Component {
                 <td>{propOrder.answer}</td>
                 <td><Button color="danger" propOrderId={propOrder.id} onClick={() => this.cancelBook(propOrder.id)}
                     disabled={propOrder.status != "ORDERED"} style={{ minWidth: "100%" }}>
-                    Cancel booking
+                    {dispense("cancelOrder")}
                 </Button></td>
             </tr>
         })
@@ -158,18 +159,18 @@ class MyProps extends React.Component {
 
         if (this.state.infoMode) {
             modeView = <tr>
-                <th width="20%">Prop Name</th>
-                <th width="20%">Pieces</th>
-                <th width="20%">Total Cost</th>
-                <th width="20%">Status</th>
-                <th width="20%">Operations</th>
+                <th width="20%">{dispense("propTitle")}</th>
+                <th width="20%">{dispense("piecesOrDay")}</th>
+                <th width="20%">{dispense("totalCost")}</th>
+                <th width="20%">{dispense("status")}</th>
+                <th width="20%">{dispense("operations")}</th>
             </tr>
         } else {
             modeView = <tr>
-                <th width="20%">Prop name</th>
-                <th width="40%">Comment</th>
-                <th width="40%">Answer</th>
-                <th width="20%">Operations</th>
+                <th width="20%">{dispense("propTitle")}</th>
+                <th width="40%">{dispense("comment")}</th>
+                <th width="40%">{dispense("answer")}</th>
+                <th width="20%">{dispense("operations")}</th>
             </tr>
         }
 
@@ -179,7 +180,7 @@ class MyProps extends React.Component {
                 <div class="mt-3 ms-3">
                     <Button style={{ minWidth: '15%' }}
                         onClick={this.toggleMode} color={this.state.infoMode ? "success" : "warning"}>
-                        {this.state.infoMode ? "Info Mode" : "Comment Mode"}
+                        {this.state.infoMode ? dispense("information") : dispense("comments")}
                     </Button>
                 </div>
                 <div class="mt-3 ms-3" style={{ "display": "flex" }}>
@@ -187,18 +188,18 @@ class MyProps extends React.Component {
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">🔎</span>
                         </div>
-                        <input type="text" class="form-control" value={this.state.filterName} onChange={this.changeFilterName} placeholder="Prop Name" aria-label="Category Name" aria-describedby="basic-addon1" />
+                        <input type="text" class="form-control" value={this.state.filterName} onChange={this.changeFilterName} placeholder={dispense("propName")} aria-label="Category Name" aria-describedby="basic-addon1" />
                     </div>
                     <ButtonGroup className='ms-3'>
-                        <Button onClick={this.changeMode} color={this.state.mode == "ALL" ? "success" : "outline-success"} value="ALL" >All</Button>
-                        <Button onClick={this.changeMode} color={this.state.mode == "ORDERED" ? "success" : "outline-success"} value="ORDERED">Ordered</Button>
-                        <Button onClick={this.changeMode} color={this.state.mode == "ACCEPTED" ? "success" : "outline-success"} value="ACCEPTED">Accepted</Button>
-                        <Button onClick={this.changeMode} color={this.state.mode == "DELIVERED" ? "success" : "outline-success"} value="DELIVERED">Delivered</Button>
+                        <Button onClick={this.changeMode} color={this.state.mode == "ALL" ? "success" : "outline-success"} value="ALL" >{dispense("all")}</Button>
+                        <Button onClick={this.changeMode} color={this.state.mode == "ORDERED" ? "success" : "outline-success"} value="ORDERED">{dispense("ordered")}</Button>
+                        <Button onClick={this.changeMode} color={this.state.mode == "ACCEPTED" ? "success" : "outline-success"} value="ACCEPTED">{dispense("accepted")}</Button>
+                        <Button onClick={this.changeMode} color={this.state.mode == "DELIVERED" ? "success" : "outline-success"} value="DELIVERED">{dispense("delivered")}</Button>
                     </ButtonGroup>
                     <Button className="ms-3"
                         onClick={this.changeSortCost}
                         color={this.state.sortCost == "None" ? "outline-success" : "success"}>
-                        Cost Sort {this.state.sortCost == "None" ? "" : this.state.sortCost == "Asc" ? "🔺": "🔻"}
+                        {dispense("costSort")} {this.state.sortCost == "None" ? "" : this.state.sortCost == "Asc" ? "🔺": "🔻"}
                     </Button>
                 </div>
                 <div>

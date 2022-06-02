@@ -44,16 +44,17 @@ services:
     depends_on:
       - db
       
-  eyft:
-    image: eyft/backend-server-monolit
+  eyft-backend:
+    image: eyft/backend:1.0.0
     restart: always
     ports: 
       - 8080:8080
     environment:
-      spring_datasource_url: jdbc:mysql://db:3306/db_eyft?createDatabaseIfNotExist=true
+      #spring_datasource_url: jdbc:mysql://db:3306/db_eyft?createDatabaseIfNotExist=true
       photo_directory_path: /CWPhotos
       spring_kafka_bootstrap_servers: kafka:9092
       spring_datasource_username: root
+      server_ssl_key_store: keystore.p12
     depends_on:
       - kafka
       - db
@@ -61,11 +62,11 @@ services:
       - kafka:kafka
       
   eyft-frontend:
-    image: eyft/frontend-server-monolit
+    image: eyft/frontend:1.0.0
     restart: always
     ports: 
-      - 3000:3000
+      - 80:3000
     depends_on:
-      - eyft
+      - eyft-backend
     links:
-      - eyft:eyft
+      - eyft-backend:eyft-backend

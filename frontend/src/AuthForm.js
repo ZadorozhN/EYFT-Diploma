@@ -4,6 +4,7 @@ import AppNavbar from "./AppNavbar";
 import ErrorHandler from './Handler/ErrorHandler';
 import ErrorNotifier from "./Handler/ErrorNotifier";
 import { Button } from "reactstrap";
+import { dispense } from "Localization/Dispenser";
 
 var jwt = require('jsonwebtoken');
 const roleUser = "ROLE_USER"
@@ -40,7 +41,7 @@ class AuthForm extends React.Component {
 
 		if(this.state.recoverMode){
 			let data = {
-				login: this.state.login,
+				email: this.state.login,
 				type: "FORGOTTEN_PASSWORD"
 			}
 
@@ -108,27 +109,27 @@ class AuthForm extends React.Component {
 				<div class="container">
 					<form onSubmit={this.handleSubmit}>				
 						<div class="form-group mb-2">
-							<label class="form-label">Login</label>
+							<label class="form-label">{this.state.recoverMode?  dispense("email") : dispense("login")}</label>
 							<input type="text" class="form-control"
 								name="login" value={this.state.login} onChange={this.handleChange} />
 						</div>
 
 						{this.state.recoverMode? "":
 						<div class="form-group mb-2">
-							<label class="form-label">Password</label>
+							<label class="form-label">{dispense("password")}</label>
 							<input type="password" class="form-control"
 								name="password" value={this.state.password} onChange={this.handleChange} />
 						</div>}
 
 						<div className="d-grid gap-2">
-							<Button class="btn btn-success mt-3" color="success">{this.state.recoverMode? "Send email" : "Log in"}</Button>
+							<Button class="btn btn-success mt-3" color="success">{this.state.recoverMode? dispense("sendEmail") : dispense("enter")}</Button>
 						</div>
 					</form>
 					<div className="d-grid gap-2 mt-3" id="passwordRecoveringStart">
-						<button class="btn btn-warning" onClick={this.recoverPassword}>{this.state.recoverMode? "Have you remind your password?" 
-						: "Have you forgotten your password?"}</button>
+						<button class="btn btn-warning" onClick={this.recoverPassword}>{this.state.recoverMode? dispense("haveRemindedPassword") 
+						: dispense("haveForgottenPassword")}</button>
 						{this.state.recoverMode?
-						<span class='badge bg-success mt-3'>Enter your login and a message will be sent to your email</span>
+						<span class='badge bg-success mt-3'>{dispense("enterEmailAndYouWillGetPassword")}</span>
 						: ""}
 					</div>
 				</div>

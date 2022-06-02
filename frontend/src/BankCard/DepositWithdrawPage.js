@@ -7,6 +7,7 @@ import cardCss from '../card.css'
 import DepositPage from './DepositPage';
 import WithdrawPage from './WithdrawPage';
 import BankClient from './BankClient/BankClient';
+import { dispense } from "Localization/Dispenser";
 
 class DepositWithdrawPage extends React.Component {
     constructor(props) {
@@ -34,14 +35,14 @@ class DepositWithdrawPage extends React.Component {
                         <NavLink
                             onClick={() => this.toggle("1")}
                             active={this.state.activeTab == "1"}>
-                            Deposit
+                            {dispense("deposit")}
                         </NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink
                             onClick={() => this.toggle("2")}
                             active={this.state.activeTab == "2"}>
-                            Withdraw
+                            {dispense("withdraw")}
                         </NavLink>
                     </NavItem>
                 </Nav>

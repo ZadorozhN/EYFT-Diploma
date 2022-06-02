@@ -9,6 +9,7 @@ import ErrorHandler from './Handler/ErrorHandler.js';
 import ErrorNotifier from './Handler/ErrorNotifier.js';
 import $ from "jquery"
 import Waiter from './Waiter.js';
+import {dispense} from 'Localization/Dispenser'
 
 const roleAdmin = "ROLE_ADMIN"
 
@@ -147,24 +148,24 @@ class UserList extends Component {
 
 			let role = ""
 			if (user.role === "ADMIN") {
-				role = <span class="badge bg-danger" style={{ minWidth: "100%" }}>Admin</span>
+				role = <span class="badge bg-danger" style={{ minWidth: "100%" }}>{dispense("admin")}</span>
 			} else if (user.role === "USER") {
-				role = <span class="badge bg-success" style={{ minWidth: "100%" }}>User</span>
+				role = <span class="badge bg-success" style={{ minWidth: "100%" }}>{dispense("user")}</span>
 
 			} else if (user.role === "ARRANGER") {
-				role = <span class="badge bg-warning text-dark" style={{ minWidth: "100%" }}>Arranger</span>
+				role = <span class="badge bg-warning text-dark" style={{ minWidth: "100%" }}>{dispense("arranger")}</span>
 			}
 
 			let enabled = user.enabled
-				? <span class="badge bg-success" style={{ minWidth: "100%" }}>Enabled</span>
-				: <span class="badge bg-danger" style={{ minWidth: "100%" }}>Disabled</span>
+				? <span class="badge bg-success" style={{ minWidth: "100%" }}>{dispense("active")}</span>
+				: <span class="badge bg-danger" style={{ minWidth: "100%" }}>{dispense("inactive")}</span>
 
 			let arrangerRoleRequested = user.arrangerRoleRequested
 				? <ButtonGroup style={{ minWidth: "100%" }}>
-					<button size="sm" style={{ minWidth: "50%" }} class="badge btn-success" onClick={() => this.acceptArrangerRequest(user.id)}>Accept</button>
-					<button size="sm" style={{ minWidth: "50%" }} class="badge btn-danger" onClick={() => this.declineArrangerRequest(user.id)}>Decline</button>
+					<button size="sm" style={{ minWidth: "50%" }} class="badge btn-success" onClick={() => this.acceptArrangerRequest(user.id)}>{dispense("accept")}</button>
+					<button size="sm" style={{ minWidth: "50%" }} class="badge btn-danger" onClick={() => this.declineArrangerRequest(user.id)}>{dispense("decline")}</button>
 				</ButtonGroup>
-				: <span class="badge bg-danger" style={{ minWidth: "100%" }}>Not Requested</span>
+				: <span class="badge bg-danger" style={{ minWidth: "100%" }}>{dispense("arrangerRoleIsNotRequested")}</span>
 
 			return <tr key={user.id}>
 				<td>{user.login}</td>
@@ -174,9 +175,9 @@ class UserList extends Component {
 				<td>{arrangerRoleRequested}</td>
 				<td>
 					<ButtonGroup style={{ minWidth: "100%" }}>
-						<Button size="sm" style={{ minWidth: "33%" }} color="dark" tag={Link} to={`/guest/${user.login}`}>Review</Button>
-						<Button size="sm" style={{ minWidth: "33%" }} color="success" tag={Link} to={"/user-management/users/" + user.id}>Edit</Button>
-						<Button size="sm" style={{ minWidth: "33%" }} color="danger" onClick={() => this.remove(user.id)}>Delete</Button>
+						<Button size="sm" style={{ minWidth: "33%" }} color="dark" tag={Link} to={`/guest/${user.login}`}>{dispense("visit")}</Button>
+						<Button size="sm" style={{ minWidth: "33%" }} color="success" tag={Link} to={"/user-management/users/" + user.id}>{dispense("edit")}</Button>
+						<Button size="sm" style={{ minWidth: "33%" }} color="danger" onClick={() => this.remove(user.id)}>{dispense("delete")}</Button>
 					</ButtonGroup>
 				</td>
 			</tr>
@@ -203,12 +204,12 @@ class UserList extends Component {
 						<Table>
 							<thead>
 								<tr>
-									<th width="10%">Login</th>
-									<th width="40%">Email</th>
-									<th width="10%">Role</th>
-									<th width="7%">Is Enabled</th>
-									<th width="10%">Is Arranger Role Requested</th>
-									<th width="20%">Operations</th>
+									<th width="10%">{dispense("login")}</th>
+									<th width="40%">{dispense("email")}</th>
+									<th width="10%">{dispense("role")}</th>
+									<th width="7%">{dispense("activity")}</th>
+									<th width="10%">{dispense("isArrangerRoleRequested")}</th>
+									<th width="20%">{dispense("operations")}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -271,24 +272,24 @@ class UserList extends Component {
 
 		return <Form >
 			<InputGroup>
-				<Input placeholder='Login' style={{ maxWidth: "30%" }} value={this.state.filterLogin} onChange={this.handleChangeValue} name="filterLogin"></Input>
-				<Input placeholder='Email' style={{ maxWidth: "70%" }} value={this.state.filterEmail} onChange={this.handleChangeValue} name="filterEmail"></Input>
+				<Input placeholder={dispense("login")} style={{ maxWidth: "30%" }} value={this.state.filterLogin} onChange={this.handleChangeValue} name="filterLogin"></Input>
+				<Input placeholder={dispense("email")} style={{ maxWidth: "70%" }} value={this.state.filterEmail} onChange={this.handleChangeValue} name="filterEmail"></Input>
 			</InputGroup>
 			<ButtonGroup className='mt-3'>
-				<Button onClick={this.handleChangeValue} name="filterRole" value="USER" color={this.state.filterRole == "USER" ? "success" : "outline-success"}>User</Button>
-				<Button onClick={this.handleChangeValue} name="filterRole" value="ARRANGER" color={this.state.filterRole == "ARRANGER" ? "warning" : "outline-warning text-dark"}>Arranger</Button>
-				<Button onClick={this.handleChangeValue} name="filterRole" value="ADMIN" color={this.state.filterRole == "ADMIN" ? "danger" : "outline-danger"}>Admin</Button>
+				<Button onClick={this.handleChangeValue} name="filterRole" value="USER" color={this.state.filterRole == "USER" ? "success" : "outline-success"}>{dispense("user")}</Button>
+				<Button onClick={this.handleChangeValue} name="filterRole" value="ARRANGER" color={this.state.filterRole == "ARRANGER" ? "warning" : "outline-warning text-dark"}>{dispense("arranger")}</Button>
+				<Button onClick={this.handleChangeValue} name="filterRole" value="ADMIN" color={this.state.filterRole == "ADMIN" ? "danger" : "outline-danger"}>{dispense("admin")}</Button>
 			</ButtonGroup>
 			<ButtonGroup className='mt-3 ms-3'>
 				<Button onClick={this.handleChangeValueBoolThrice} name="filterEnabled"
 					color={this.state.filterEnabled == null ? "outline-success" : this.state.filterEnabled ? "success" : "danger"}>
-					{this.state.filterEnabled == null ? "Is Enabled" : this.state.filterEnabled ? "Enabled" : "Disabled"}
+					{this.state.filterEnabled == null ? dispense("isEnabled") : this.state.filterEnabled ? dispense("enabled") : dispense("disabled")}
 				</Button>
 				<Button onClick={this.handleChangeValueBoolThrice} name="filterIsArrangerRoleRequested"
 					color={this.state.filterIsArrangerRoleRequested == null ? "outline-success" : this.state.filterIsArrangerRoleRequested ? "success" : "danger"}>
-					{this.state.filterIsArrangerRoleRequested == null ? "Is Requested" : this.state.filterIsArrangerRoleRequested ? "Requested" : "Not Requested"}
+					{this.state.filterIsArrangerRoleRequested == null ? dispense("isRequested") : this.state.filterIsArrangerRoleRequested ? dispense("requested") : dispense("notRequested")}
 					</Button>
-				<Button color="secondary" onClick={this.clearFilter}>Clear Filter</Button>
+				<Button color="secondary" onClick={this.clearFilter}>{dispense("clear filter")}</Button>
 			</ButtonGroup>
 		</Form >
 	}

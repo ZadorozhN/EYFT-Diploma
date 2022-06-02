@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import AppNavbar from '../../AppNavbar.js';
-import { Link } from 'react-router-dom';
 import { Container, Alert } from 'reactstrap';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
-import MePage from '../MePage';
-import MeJoinedEvents from '../MeJoinedEvents';
-import MeEventsToJoin from '../MeEventsToJoin';
 import ErrorNotifier from '../../Handler/ErrorNotifier';
 import GuestMePage from './GuestMePage';
-import GuestMeJoinedEvents from './GuestMeJoinedEvents'
 import GuestMePhotos from './GuestMePhotos';
 import GuestMeArrangedEvents from './GuestMeArrangedEvents';
 import classnames from 'classnames';
 import Constants from '../../Const/Constants';
-import ErrorHandler from '../../Handler/ErrorHandler';
-import $ from 'jquery';
+import { dispense } from 'Localization/Dispenser'
+
 class GuestPersonalPage extends Component {
     constructor(props) {
         super(props);
@@ -36,7 +31,6 @@ class GuestPersonalPage extends Component {
     }
 
     render() {
-
 
         return (
             <div>
@@ -63,7 +57,7 @@ class GuestPersonalPage extends Component {
                                                 className={classnames({ active: this.state.activeTab === '1' })}
                                                 onClick={() => { this.toggle('1'); }}
                                             >
-                                                Arranged Events 🎉
+                                                {dispense('arrangedEvents')} 🎉
                                             </NavLink>
                                         </NavItem> : ""}
                                     <NavItem>
@@ -71,7 +65,7 @@ class GuestPersonalPage extends Component {
                                             className={classnames({ active: this.state.activeTab === '2' })}
                                             onClick={() => { this.toggle('2'); }}
                                         >
-                                            Photos 📷
+                                            {dispense('photos')} 📷
                                         </NavLink>
                                     </NavItem>
                                 </Nav>

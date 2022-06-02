@@ -13,5 +13,5 @@ public interface BalanceService {
 
     Balance save(Balance balance);
 
-    Balance handleDelta(String accountId, Long delta);
+    Balance handleDelta(String accountId, long delta);
 }

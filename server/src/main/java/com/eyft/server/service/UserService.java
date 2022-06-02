@@ -16,6 +16,9 @@ public interface UserService {
 
     Optional<User> findByLogin(String login);
 
+    @Transactional(readOnly = true)
+    Optional<User> findByEmail(String email);
+
     void setAvatar(User user, Photo photo);
 
     void deleteById(Long id);
@@ -35,4 +38,6 @@ public interface UserService {
     void joinEvent(User user, Event event);
 
     void leaveEvent(User user, Event event);
+
+    User getByLogin(String login);
 }

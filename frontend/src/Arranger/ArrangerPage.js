@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button, Container, Col, Row} from 'react-bootstrap';
 import ErrorNotifier from '../Handler/ErrorNotifier';
 import { Card, CardGroup, Alert, ToggleButton } from 'react-bootstrap'
+import {dispense} from "Localization/Dispenser.js"
 
 const roleArranger = "ROLE_ARRANGER"
 const roleAdmin = "ROLE_ADMIN"
@@ -51,46 +52,32 @@ class ArrangerPage extends Component {
                         <Card onClick={this.goToArrangedEvents}>
                             <Card.Img variant="top" style={{minWidth: "100%"}} src={"/arrangedEvents.png"} className="mt-0 events" />
                             <Card.Body>
-                                <Card.Title>Arranged Events</Card.Title>
-                                <Card.Text>Events you decided to arrange, hm...</Card.Text>
+                                <Card.Title>{dispense("arrangedEvents")}</Card.Title>
+                                <Card.Text>{dispense("arrangerArrangedEventsDescription")}</Card.Text>
                             </Card.Body>
                         </Card>
                         <Card onClick={this.goToEventArrangement}>
                             <Card.Img variant="top" style={{minWidth: "100%"}} src={"/arrangement.webp"} className="mt-0" />
                             <Card.Body>
-                                <Card.Title>Event arrangement</Card.Title>
-                                <Card.Text>Do you want to arrange a new event, Eh?</Card.Text>
+                                <Card.Title>{dispense("eventArrangement")}</Card.Title>
+                                <Card.Text>{dispense("arrangerArrangeEventDescription")}</Card.Text>
                             </Card.Body>
                         </Card>
                         <Card onClick={this.goToPropsMarket}>
                             <Card.Img variant="top" style={{minWidth: "100%"}} src={"/market.jpg"} className="mt-0" />
                             <Card.Body>
-                                <Card.Title>Props Market</Card.Title>
-                                <Card.Text>Bits and pieces</Card.Text>
+                                <Card.Title>{dispense("orderProps")}</Card.Title>
+                                <Card.Text>{dispense("arrangerOrderPropsDescription")}</Card.Text>
                             </Card.Body>
                         </Card>
                         <Card onClick={this.goToOrderedProps}>
                             <Card.Img variant="top" style={{minWidth: "100%"}} src={"/orderedProps.jpg"} className="mt-0" />
                             <Card.Body>
-                                <Card.Title>Ordered Props</Card.Title>
-                                <Card.Text>Your props, at your service!</Card.Text>
+                                <Card.Title>{dispense("orderedProps")}</Card.Title>
+                                <Card.Text>{dispense("arrangerOrderedPropsDescription")}</Card.Text>
                             </Card.Body>
                         </Card>
                     </div>
-                    {/* <div className="d-grid gap-2">
-                        <Button variant="success" onClick={this.goToArrengedEvents}>
-                            Arranged events
-                        </Button>
-                        <Button variant="success" onClick={this.goToEventArrangement}>
-                            Arrange Event
-                        </Button>
-                        <Button variant="success" onClick={this.goToPropsMarket}>
-                            Props Market
-                        </Button>
-                        <Button variant="success" onClick={this.goToOrderedProps}>
-                            Ordered Props
-                        </Button>
-                    </div> */}
             </Container>
             <ErrorNotifier/>
         </div>

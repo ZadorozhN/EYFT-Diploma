@@ -8,6 +8,7 @@ import ErrorHandler from '../Handler/ErrorHandler';
 import ErrorNotifier from '../Handler/ErrorNotifier';
 import Constants from '../Const/Constants';
 import style from "../style.css"
+import { dispense } from "Localization/Dispenser";
 
 const address = ""
 
@@ -61,36 +62,36 @@ class MyPage extends Component {
                         <Card onClick={this.goToEvents}>
                             <Card.Img variant="top" src={"/eventsLotr.webp"} className="mt-0" />
                             <Card.Body>
-                                <Card.Title>Events</Card.Title>
-                                <Card.Text>Do you want a party? Eh?</Card.Text>
+                                <Card.Title>{dispense("events")}</Card.Title>
+                                <Card.Text>{dispense("userEventsDescription")}</Card.Text>
                             </Card.Body>
                         </Card>
                         <Card onClick={this.goToJoinedEvents}>
                             <Card.Img variant="top" src={"/joinedEvents.webp"} className="mt-0" />
                             <Card.Body>
-                                <Card.Title>Joined Events</Card.Title>
-                                <Card.Text>Have you forgotten your dates?</Card.Text>
+                                <Card.Title>{dispense("participationInEvents")}</Card.Title>
+                                <Card.Text>{dispense("userParticipationInEventsDescription")}</Card.Text>
                             </Card.Body>
                         </Card>
                         <Card onClick={this.goToMessenger}>
                             <Card.Img variant="top" src={"/talks.jpg"} className="mt-0" />
                             <Card.Body>
-                                <Card.Title>Messenger</Card.Title>
-                                <Card.Text>Let's have a talk</Card.Text>
+                                <Card.Title>{dispense("messenger")}</Card.Title>
+                                <Card.Text>{dispense("userMessengerDescription")}</Card.Text>
                             </Card.Body>
                         </Card>
                         <Card onClick={this.goToPhotos}>
                             <Card.Img variant="top" src={"/photos.jpg"} className="mt-0" />
                             <Card.Body>
-                                <Card.Title>Photos</Card.Title>
-                                <Card.Text>Photos that you uploaded</Card.Text>
+                                <Card.Title>{dispense("photos")}</Card.Title>
+                                <Card.Text>{dispense("userPhotosDescription")}</Card.Text>
                             </Card.Body>
                         </Card>
                         <Card onClick={this.goToSettings}>
                             <Card.Img variant="top" src={"/gears.jpg"} className="mt-0" />
                             <Card.Body>
-                                <Card.Title>Settings</Card.Title>
-                                <Card.Text>Do you want to change something?</Card.Text>
+                                <Card.Title>{dispense("settings")}</Card.Title>
+                                <Card.Text>{dispense("userSettingsDescription")}</Card.Text>
                             </Card.Body>
                         </Card>
                     </div>

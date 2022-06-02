@@ -1,4 +1,5 @@
 FROM node:12-alpine as builder
+VOLUME /eyft-frontend-volume
 WORKDIR /app
 COPY package.json /app/package.json
 COPY . /app/

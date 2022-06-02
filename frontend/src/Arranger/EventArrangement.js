@@ -12,6 +12,7 @@ import ErrorNotifier from '../Handler/ErrorNotifier';
 import classnames from 'classnames';
 import ArrangementProps from './PropsForArrangement/ArrangementProps';
 import Multiselect from 'multiselect-react-dropdown';
+import {dispense} from "Localization/Dispenser.js"
 
 const address = "/arranger/arrangement"
 
@@ -162,22 +163,22 @@ class EventArrangement extends React.Component {
             <Container>
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup className="mt-3">
-                        <Label for="name">Name</Label>
+                        <Label for="name">{dispense("title")}</Label>
                         <Input type="text" name="name" id="name" value={event.name || ''}
                             onChange={this.handleChange} autoComplete="event" />
                     </FormGroup>
                     <FormGroup className="mt-3">
-                        <Label for="description">Description</Label>
+                        <Label for="description">{dispense("description")}</Label>
                         <Input type="text" name="description" id="description" value={event.description || ''}
                             onChange={this.handleChange} autoComplete="description" />
                     </FormGroup>
                     <FormGroup className="mt-3">
-                        <Label for="place">Place</Label>
+                        <Label for="place">{dispense("place")}</Label>
                         <Input type="text" name="place" id="place" value={event.place || ''}
                             onChange={this.handleChange} autoComplete="place" />
                     </FormGroup>
                     <FormGroup className="mt-3">
-                        <Label for="price">Price in Cents</Label>
+                        <Label for="price">{dispense("priceInCents")}</Label>
                         <Input type="number" name="price" id="price" value={event.price || ''}
                             onChange={this.handleChange} autoComplete="price" />
                     </FormGroup>
@@ -185,7 +186,7 @@ class EventArrangement extends React.Component {
                         <Col md="8">
                             <FormGroup className="mt-3">
                                 <div>
-                                <Label>Categories</Label>
+                                <Label>{dispense("categories")}</Label>
                                 <Multiselect
                                     options={this.state.categories} // Options to display in the dropdown
                                     selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
@@ -199,7 +200,7 @@ class EventArrangement extends React.Component {
                         <Col>
                             <FormGroup className="mt-3">
                                 <InputGroup style={{"display":"flex", justifyContent:"right"}}>
-                                        <Label for="startInstant">Starts at</Label>
+                                        <Label for="startInstant">{dispense("startAt")}</Label>
                                         <DatePicker className='ms-5'
                                             name="startInstant"
                                             dateFormat="DD-MM-YYYY"
@@ -210,7 +211,7 @@ class EventArrangement extends React.Component {
                             </FormGroup>
                             <FormGroup className="mt-3">
                                 <InputGroup style={{"display":"flex", justifyContent:"right"}}>
-                                    <Label for="endInstant">Finishes at</Label>
+                                    <Label for="endInstant">{dispense("finishAt")}</Label>
                                     <DatePicker className='ms-5'
                                         name="endInstant"
                                         dateFormat="DD-MM-YYYY"
@@ -224,8 +225,8 @@ class EventArrangement extends React.Component {
                     </Row>
 
                     <FormGroup className="mt-3" style={{minWidth:"100%", display:"flex", justifyContent:"space-between"}}>
-                        <Button color="success" type="submit" style={{minWidth:"48%"}}>Save</Button>{' '}
-                        <Button color="secondary" tag={Link} to="/arranger" style={{minWidth:"48%"}}>Cancel</Button>
+                        <Button color="success" type="submit" style={{minWidth:"48%"}}>{dispense("create")}</Button>{' '}
+                        <Button color="secondary" tag={Link} to="/arranger" style={{minWidth:"48%"}}>{dispense("cancel")}</Button>
                     </FormGroup>
                 </Form>
 

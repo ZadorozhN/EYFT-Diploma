@@ -36,4 +36,8 @@ public class Balance {
 
         return new Balance(accountId);
     }
+
+    public String toString(){
+        return accountId;
+    }
 }

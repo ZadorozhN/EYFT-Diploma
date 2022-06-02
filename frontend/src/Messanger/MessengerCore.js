@@ -4,10 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 
 import { Container, Alert, Input, Label } from 'reactstrap';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
-import { Card } from 'react-bootstrap'
-import $ from 'jquery'
-import ErrorHandler from '../Handler/ErrorHandler';
-import { minWidth } from '@mui/system';
+import { dispense } from "Localization/Dispenser";
 
 var Stomp = require('stompjs');
 var SockJS = require("sockjs-client");
@@ -70,8 +67,8 @@ class MessengerCore extends React.Component {
         return <Container fluid>
             <Row>
                 <Col md="2" className='border p-3'>
-                    <Label className='mb-1'>Receivers</Label>
-                    <Input onChange={this.changeFilterName} className="mb-3" placeholder='Login'></Input>
+                    <Label className='mb-1'>{dispense("receivers")}</Label>
+                    <Input onChange={this.changeFilterName} className="mb-3" placeholder={dispense("receiverLogin")}></Input>
                     <div class="receiversScroller border">
                         <ul class="nav flex-column flex-nowrap">
                             {receiversControls}
@@ -93,7 +90,7 @@ class MessengerCore extends React.Component {
                                 }
                             }} />
                         <div class="input-group-append" style={{minWidth:"20%"}}>
-                            <button type="button" class="btn btn-outline-success" style={{minWidth:"100%"}} onClick={this.sendMessage}>Send</button>
+                            <button type="button" class="btn btn-outline-success" style={{minWidth:"100%"}} onClick={this.sendMessage}>{dispense("send")}</button>
                         </div>
                     </div>
                 </Col>

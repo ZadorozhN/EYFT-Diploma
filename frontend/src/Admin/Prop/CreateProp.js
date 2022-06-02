@@ -5,6 +5,7 @@ import ErrorNotifier from '../../Handler/ErrorNotifier'
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Container, Form, FormGroup, Input, Label, ButtonGroup } from 'reactstrap';
 import AppNavbar from '../../AppNavbar';
+import {dispense} from "Localization/Dispenser.js"
 
 const roleAdmin = "ROLE_ADMIN"
 
@@ -82,44 +83,44 @@ class CreateProp extends React.Component {
             <Container>
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup className="mt-3">
-                        <Label for="name">Name</Label>
+                        <Label for="name">{dispense("name")}</Label>
                         <Input type="text" name="name" id="name" value={prop.name || ''}
                             onChange={this.handleChange} autoComplete="event" />
                     </FormGroup>
                     <FormGroup className="mt-3">
-                        <Label for="description">Description</Label>
+                        <Label for="description">{dispense("description")}</Label>
                         <Input type="text" name="description" id="description" value={prop.description || ''}
                             onChange={this.handleChange} autoComplete="description" />
                     </FormGroup>
                     <div class="mt-3 createPropCostAndTypes">
                         <FormGroup>
-                            <Label for="description">Prop Type</Label><br />
+                            <Label for="description">{dispense("propType")}</Label><br />
                             <ButtonGroup>
                                 <Button color={this.state.prop.propType == "THING" ? "success" : "outline-success"}
-                                    onClick={this.handleChange} name="propType" value="THING" >Thing</Button>
+                                    onClick={this.handleChange} name="propType" value="THING" >{dispense("thing")}</Button>
                                 <Button color={this.state.prop.propType == "PLACE" ? "success" : "outline-success"}
-                                    onClick={this.handleChange} name="propType" value="PLACE" >Place</Button>
+                                    onClick={this.handleChange} name="propType" value="PLACE" >{dispense("place")}</Button>
                             </ButtonGroup>
                         </FormGroup>
                         <FormGroup >
-                            <Label for="cost">Cost (Cents)</Label>
+                            <Label for="cost">{dispense("costCents")}</Label>
                             <Input type="number" name="cost" id="cost" value={prop.cost || ''}
                                 onChange={this.handleChange} autoComplete="cost" max={9223372036854775807} />
                         </FormGroup>
                         <FormGroup >
-                            <Label for="description">Cost Type</Label><br />
+                            <Label for="description">{dispense("costType")}</Label><br />
                             <ButtonGroup>
                                 <Button color={this.state.prop.costType == "PIECE" ? "success" : "outline-success"}
-                                    onClick={this.handleChange} name="costType" value="PIECE" >Piece</Button>
+                                    onClick={this.handleChange} name="costType" value="PIECE" >{dispense("piece")}</Button>
                                 <Button color={this.state.prop.costType == "DAY" ? "success" : "outline-success"}
-                                    onClick={this.handleChange} name="costType" value="DAY" >Day</Button>
+                                    onClick={this.handleChange} name="costType" value="DAY" >{dispense("day")}</Button>
                             </ButtonGroup>
                         </FormGroup>
                     </div>
                     <FormGroup className="mt-5">
                         <div class="saveCancelPropButtons">
-                            <Button color="success" type="submit" className='savePropButton'>Save</Button>{' '}
-                            <Button color="secondary" className='cancelPropButton' onClick={this.toggleCreateMode}>Cancel</Button>
+                            <Button color="success" type="submit" className='savePropButton'>{dispense("create")}</Button>{' '}
+                            <Button color="secondary" className='cancelPropButton' onClick={this.toggleCreateMode}>{dispense("cancel")}</Button>
                         </div>
                     </FormGroup>
                 </Form>

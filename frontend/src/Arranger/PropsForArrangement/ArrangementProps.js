@@ -11,6 +11,7 @@ import classnames from 'classnames';
 import $ from "jquery"
 import Waiter from "../../Waiter"
 import { toHaveStyle } from "@testing-library/jest-dom/dist/matchers"
+import {dispense} from "Localization/Dispenser.js"
 
 Date.prototype.addDays = function (days) {
     var dat = new Date(this.valueOf())
@@ -91,12 +92,12 @@ class ArrangementProps extends React.Component {
         let props = this.state.props.map((prop) => {
             let removeButton = <Button style={{ minWidth: "100%" }}
                 color="danger" value={prop.id} onClick={this.removeFromCart}>
-                Remove from cart
+                {dispense("removeFromCart")}
             </Button>
 
             let addButton = <Button style={{ minWidth: "100%" }}
                 color="success" value={prop.id} onClick={this.addToCart}>
-                Add to cart
+                {dispense("addToCart")}
             </Button>
 
             let isAddedToCart = this.state.cart.includes(prop.id.toString())
@@ -104,7 +105,7 @@ class ArrangementProps extends React.Component {
             return <tr key={prop.id}>
                 <td style={{ whiteSpace: 'nowrap' }}>{prop.name}</td>
                 <td>{prop.description}</td>
-                <td>{MoneyFormatter.fromatDollars(prop.cost)}</td>
+                <td>{MoneyFormatter.format(prop.cost)}</td>
                 <td><span style={{ minWidth: "100%" }} class={"badge " + (prop.costType == "PIECE" ? "bg-success" : "bg-warning text-dark")}>{prop.costType}</span></td>
                 <td><span style={{ minWidth: "100%" }} class={"badge " + (prop.propType == "PLACE" ? "bg-success" : "bg-warning text-dark")}>{prop.propType}</span></td>
                 <td>{isAddedToCart ? removeButton : addButton}</td>
@@ -157,11 +158,11 @@ class ArrangementProps extends React.Component {
                 totalCost += prop.costType == "DAY" ? prop.cost * orderedDaysAmount : prop.cost * piecesAmount
                 return <tr key={prop.id}>
                     <td style={{ whiteSpace: 'nowrap' }}>{prop.name}</td>
-                    <td>{MoneyFormatter.fromatDollars(prop.cost)}</td>
+                    <td>{MoneyFormatter.format(prop.cost)}</td>
                     <td><span class={"badge " + (prop.costType == "PIECE" ? "bg-success" : "bg-warning")}>{prop.costType}</span></td>
-                    <td><Input propId={prop.id} placeholder="Comment" id={`comment-${prop.id}`}></Input></td>
+                    <td><Input propId={prop.id} placeholder={dispense("comment")} id={`comment-${prop.id}`}></Input></td>
                     {prop.costType == "DAY" ? <td>{days}</td> : <td><Input onChange={this.handlePiecesChange} propId={prop.id}
-                        value={this.state.piecesMap.get(prop.id.toString())} placeholder="Amount"></Input></td>}
+                        value={this.state.piecesMap.get(prop.id.toString())} placeholder={dispense("amount")}></Input></td>}
                 </tr>
             })
 
@@ -175,7 +176,7 @@ class ArrangementProps extends React.Component {
                                 className={classnames({ active: this.state.activeTab === '1' })}
                                 onClick={() => { this.toggle('1'); }}
                             >
-                                Market 🏪
+                                {dispense("catalog")} 🏪
                             </NavLink>
                         </NavItem>
                         <NavItem>
@@ -183,7 +184,7 @@ class ArrangementProps extends React.Component {
                                 className={classnames({ active: this.state.activeTab === '2' })}
                                 onClick={() => { this.toggle('2'); }}
                             >
-                                Cart 🛒
+                                {dispense("cart")} 🛒
                             </NavLink>
                         </NavItem>
                     </Nav>
@@ -192,12 +193,12 @@ class ArrangementProps extends React.Component {
                             <Table className="mt-4">
                                 <thead>
                                     <tr>
-                                        <th width="15%">Name</th>
-                                        <th width="40%">Description</th>
-                                        <th width="10%">Cost</th>
-                                        <th width="10%">Cost Type</th>
-                                        <th width="10%">Prop Type</th>
-                                        <th width="20%">Operations</th>
+                                        <th width="15%">{dispense("title")}</th>
+                                        <th width="40%">{dispense("description")}</th>
+                                        <th width="10%">{dispense("price")}</th>
+                                        <th width="10%">{dispense("costType")}</th>
+                                        <th width="10%">{dispense("propType")}</th>
+                                        <th width="20%">{dispense("operations")}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -206,15 +207,15 @@ class ArrangementProps extends React.Component {
                             </Table>
                         </TabPane>
                         <TabPane tabId="2">
-                            <h3 className="mt-4">Total cost {MoneyFormatter.fromatDollars(totalCost)}</h3>
+                            <h3 className="mt-4">{dispense("total")} {MoneyFormatter.format(totalCost)}</h3>
                             <Table className="mt-1">
                                 <thead>
                                     <tr>
-                                        <th width="10%">Name</th>
-                                        <th width="7%">Cost</th>
-                                        <th width="5%">Pay for</th>
-                                        <th width="20%">Comment</th>
-                                        <th width="35%">Order</th>
+                                        <th width="10%">{dispense("title")}</th>
+                                        <th width="7%">{dispense("cost")}</th>
+                                        <th width="7%">{dispense("costPer")}</th>
+                                        <th width="20%">{dispense("comment")}</th>
+                                        <th width="35%">{dispense("order")}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -223,9 +224,9 @@ class ArrangementProps extends React.Component {
                             </Table>
                             <div style={{ display: "flex", justifyContent: "space-between" }} className="mt-3">
                                 <Button className="" style={{ minWidth: "45%" }}
-                                    color="success" onClick={this.purchase} disabled={totalCost == 0 || totalCost > localStorage.getItem("cents")}>Purchase</Button>
+                                    color="success" onClick={this.purchase} disabled={totalCost == 0 || totalCost > localStorage.getItem("cents")}>{dispense("purchase")}</Button>
                                 <Button className="ms-3" style={{ minWidth: "45%" }}
-                                    color="warning" onClick={this.clearCart} disabled={this.state.cart.length == 0}>Clear Cart</Button>
+                                    color="warning" onClick={this.clearCart} disabled={this.state.cart.length == 0}>{dispense("clearCart")}</Button>
                             </div>
                         </TabPane>
                     </TabContent>
@@ -314,13 +315,13 @@ class ArrangementProps extends React.Component {
                 },
                 data: JSON.stringify(dto)
             }).then((res) => {
-                window.location.replace("/arranger/props/ordered")
             }).catch((err) => {
-                ErrorHandler.runErrorStringMessage("Not enough amount of money")
+                ErrorHandler.runErrorStringMessage(dispense("notEnoughAmountOfMoney"))
             })
         })
 
         this.forceUpdate()
+        window.location.replace("/arranger/props/ordered")
     }
 
     handlePiecesChange(event) {

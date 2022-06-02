@@ -4,6 +4,7 @@ import AppNavbar from './AppNavbar'
 import $ from 'jquery';
 import ErrorHandler from './Handler/ErrorHandler';
 import ErrorNotifier from './Handler/ErrorNotifier';
+import {dispense} from 'Localization/Dispenser'
 
 var history
 
@@ -58,41 +59,41 @@ class NameForm extends React.Component {
 					<form onSubmit={this.handleSubmit}>
 
 						<div class="form-group mb-2">
-							<label class="form-label">First Name</label>
+							<label class="form-label">{dispense("firstName")}</label>
 							<input type="text" class="form-control"
 								name="firstName" value={this.state.firstName} onChange={this.handleChange} />
 						</div>
 
 						<div class="form-group mb-2">
-							<label class="form-label">Last Name</label>
+							<label class="form-label">{dispense("lastName")}</label>
 							<input type="text" class="form-control"
 								name="lastName" value={this.state.lastName} onChange={this.handleChange} />
 						</div>
 
 						<div class="form-group mb-2">
-							<label class="form-label">Login</label>
+							<label class="form-label">{dispense("login")}</label>
 							<input type="text" class="form-control"
 								name="login" value={this.state.login} onChange={this.handleChange} />
 						</div>
 						
 						<div class="form-group mb-2">
-							<label class="form-label">Email</label>
+							<label class="form-label">{dispense("email")}</label>
 							<input type="text" class="form-control"
 								name="email" value={this.state.email} onChange={this.handleChange} />
 						</div>
 
 						<div class="form-group mb-2">
-							<label class="form-label">Password</label>
+							<label class="form-label">{dispense("password")}</label>
 							<input type="password" class="form-control"
 								name="password" value={this.state.password} onChange={this.handleChange} />
 						</div>
 
 						<div className="d-grid gap-2">
-							<input class="btn btn-success mt-3" type="submit" value="Register" />
+							<input class="btn btn-success mt-3" type="submit" value="Зарегистрироваться" />
 						</div>
 					</form>
 					<div className="mt-3">
-						<a href="/auth">Already registered?</a>
+						<a href="/auth">{dispense("isAlreadyRegistered")}</a>
 					</div>
 				</div>
                 <ErrorNotifier />

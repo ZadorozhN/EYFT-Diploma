@@ -11,6 +11,7 @@ import MoneyFormatter from '../../Formatter/MoneyFormatter.js';
 import Waiter from '../../Waiter.js';
 import CreateProp from "./CreateProp"
 import InstantFormatter from '../../Formatter/InstantFormatter.js';
+import {dispense} from "Localization/Dispenser.js"
 
 const roleAdmin = "ROLE_ADMIN"
 
@@ -227,11 +228,11 @@ class PropOrdersHandler extends React.Component {
 
                 let status;
                 if (propOrder.status == "ORDERED")
-                    status = <span style={{minWidth:"100%"}} class="badge bg-warning text-dark">Ordered</span>
+                    status = <span style={{minWidth:"100%"}} class="badge bg-warning text-dark">{dispense("ordered")}</span>
                 else if (propOrder.status == "ACCEPTED")
-                        status = <span style={{minWidth:"100%"}} class="badge bg-success">Accepted</span>
+                        status = <span style={{minWidth:"100%"}} class="badge bg-success">{dispense("accepted")}</span>
                 else if (propOrder.status == "DELIVERED")
-                            status = <span style={{minWidth:"100%"}} class="badge bg-secondary">Delivered</span>
+                            status = <span style={{minWidth:"100%"}} class="badge bg-secondary">{dispense("delivered")}</span>
 
                 return <tr key={propOrder.id} class={this.state.selectedPropOrders.get(propOrder.id) ? "bg-success" : ""} >
                     <td><Input
@@ -241,7 +242,7 @@ class PropOrdersHandler extends React.Component {
                     /></td>
                     <td onClick={() => this.select(propOrder)}>{propOrder.prop.name}</td>
                     <td onClick={() => this.select(propOrder)}>{propOrder.pieces ? propOrder.pieces : InstantFormatter.formatInstantMs(propOrder.orderedDate)}</td>
-                    <td onClick={() => this.select(propOrder)}>{MoneyFormatter.fromatDollars(propOrder.cost)}</td>
+                    <td onClick={() => this.select(propOrder)}>{MoneyFormatter.format(propOrder.cost)}</td>
                     <td onClick={() => this.select(propOrder)}>{InstantFormatter.formatInstant(propOrder.creationTime)}</td>
                     <td onClick={() => this.select(propOrder)}>{propOrder.userLogin}</td>
                     <td onClick={() => this.select(propOrder)}>{status}</td>
@@ -265,16 +266,16 @@ class PropOrdersHandler extends React.Component {
                 <AppNavbar />
                 <Container fluid>
                     <div class="mt-3 p-3">
-                        <Button disabled={this.state.selectedPropOrders.size == 0} color='danger' onClick={this.bulkDelete}>Bulk Delete</Button>
-                        <Button disabled={this.state.selectedPropOrders.size == 0} className="ms-3" color='warning' onClick={this.bulkRollback}>Bulk Rollback</Button>
-                        <Button disabled={this.state.selectedPropOrders.size == 0} className="ms-3" color='success' onClick={this.bulkAccept}>Bulk Accept</Button>
-                        <Button disabled={this.state.selectedPropOrders.size == 0} className="ms-3" color='success' onClick={this.bulkDeliver}>Bulk Deliver</Button>
-                        <Button className="ms-3" color={this.state.answerMode ? "success" : "outline-success"} onClick={this.toggleAnswerMode}>Answer Mode</Button>
+                        <Button disabled={this.state.selectedPropOrders.size == 0} color='danger' onClick={this.bulkDelete}>{dispense("bulkDelete")}</Button>
+                        <Button disabled={this.state.selectedPropOrders.size == 0} className="ms-3" color='warning' onClick={this.bulkRollback}>{dispense("bulkRollback")}</Button>
+                        <Button disabled={this.state.selectedPropOrders.size == 0} className="ms-3" color='success' onClick={this.bulkAccept}>{dispense("bulkAccept")}</Button>
+                        <Button disabled={this.state.selectedPropOrders.size == 0} className="ms-3" color='success' onClick={this.bulkDeliver}>{dispense("bulkDeliver")}</Button>
+                        <Button className="ms-3" color={this.state.answerMode ? "success" : "outline-success"} onClick={this.toggleAnswerMode}>{dispense("answerMode")}</Button>
                         <ButtonGroup className='ms-3'>
-                            <Button onClick={this.changeMode} color={this.state.mode == "ALL" ? "success" : "outline-success"} value="ALL" >All</Button>
-                            <Button onClick={this.changeMode} color={this.state.mode == "ORDERED" ? "success" : "outline-success"} value="ORDERED">Ordered</Button>
-                            <Button onClick={this.changeMode} color={this.state.mode == "ACCEPTED" ? "success" : "outline-success"} value="ACCEPTED">Accepted</Button>
-                            <Button onClick={this.changeMode} color={this.state.mode == "DELIVERED" ? "success" : "outline-success"} value="DELIVERED">Delivered</Button>
+                            <Button onClick={this.changeMode} color={this.state.mode == "ALL" ? "success" : "outline-success"} value="ALL" >{dispense("all")}</Button>
+                            <Button onClick={this.changeMode} color={this.state.mode == "ORDERED" ? "success" : "outline-success"} value="ORDERED">{dispense("ordered")}</Button>
+                            <Button onClick={this.changeMode} color={this.state.mode == "ACCEPTED" ? "success" : "outline-success"} value="ACCEPTED">{dispense("accepted")}</Button>
+                            <Button onClick={this.changeMode} color={this.state.mode == "DELIVERED" ? "success" : "outline-success"} value="DELIVERED">{dispense("delivered")}</Button>
                         </ButtonGroup>
                     </div>
                     <div class="mt-3 p-3">
@@ -283,17 +284,17 @@ class PropOrdersHandler extends React.Component {
 
                                 {!this.state.answerMode ? <tr>
                                     <th width="3%"></th>
-                                    <th width="15%">Name</th>
-                                    <th width="10%">Pieces/Date</th>
-                                    <th width="10%">Cost</th>
-                                    <th width="15%">Creation Time</th>
-                                    <th width="15%">Requester</th>
-                                    <th width="15%">Status</th>
+                                    <th width="15%">{dispense("name")}</th>
+                                    <th width="10%">{dispense("piecesOrDate")}</th>
+                                    <th width="10%">{dispense("cost")}</th>
+                                    <th width="15%">{dispense("creationTime")}</th>
+                                    <th width="15%">{dispense("requester")}</th>
+                                    <th width="15%">{dispense("status")}</th>
                                 </tr> : <tr>
                                     <th width="3%"></th>
-                                    <th width="15%">Name</th>
-                                    <th width="41%">Comment</th>
-                                    <th width="41%">Answer</th>
+                                    <th width="15%">{dispense("name")}</th>
+                                    <th width="41%">{dispense("comment")}</th>
+                                    <th width="41%">{dispense("answer")}</th>
                                 </tr>}
                             </thead>
                             <tbody>

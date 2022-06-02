@@ -11,6 +11,7 @@ import ErrorNotifier from '../Handler/ErrorNotifier';
 import Constants from '../Const/Constants';
 import Multiselect from 'multiselect-react-dropdown';
 import MoneyFormatter from '../Formatter/MoneyFormatter'
+import { dispense } from "Localization/Dispenser";
 
 let thisObj;
 
@@ -155,16 +156,16 @@ class MyJoinedEvents extends Component {
             let eventState = ""
             if (event.eventState == "WAITING_FOR_START") {
                 eventState =
-                    <Alert variant="warning" className="mb-0">Waiting for start</Alert>
+                    <Alert variant="warning" className="mb-0">{dispense("waiting")}</Alert>
             } else if (event.eventState == "STARTED") {
                 eventState =
-                    <Alert variant="success" className="mb-0">Started</Alert>
+                    <Alert variant="success" className="mb-0">{dispense("started")}</Alert>
             } else if (event.eventState == "FINISHED") {
                 eventState =
-                    <Alert variant="danger" className="mb-0">Finished</Alert>
+                    <Alert variant="danger" className="mb-0">{dispense("finished")}</Alert>
             } else {
                 eventState =
-                    <Alert variant="secondary" className="mb-0">Closed</Alert>
+                    <Alert variant="secondary" className="mb-0">{dispense("closed")}</Alert>
             }
 
             return <Col>
@@ -177,17 +178,17 @@ class MyJoinedEvents extends Component {
                     <div className='mb-3'>
                         {categories}
                     </div>
-                    <Link to={"/events/" + event.id}>View more</Link>
+                    <Link to={"/events/" + event.id}>{dispense("viewMore")}</Link>
                     {event.eventState == "WAITING_FOR_START" ?
-                            <Button color="outline-warning" onClick={() => this.leave(event.id)} className="mt-3" style={{ minWidth: "100%" }}>Leave</Button> :
+                            <Button color="outline-danger" onClick={() => this.leave(event.id)} className="mt-3" style={{ minWidth: "100%" }}>{dispense("leave")} {event.price ? "+" + MoneyFormatter.format(event.price):""}</Button> :
                             ""}
                 </Card.Body>
                 <Card.Footer className="text-muted">
                     <div>
-                        Starts at {startInstant.toLocaleString('en-GB', { hour12: false })}
+                        {dispense("startAt")} {startInstant.toLocaleString('en-GB', { hour12: false })}
                     </div>
                     <div>
-                        Finishes at {endInstant.toLocaleString('en-GB', { hour12: false })}
+                        {dispense("finishAt")} {endInstant.toLocaleString('en-GB', { hour12: false })}
                     </div>
                 </Card.Footer>
             </Card>
@@ -328,7 +329,7 @@ class MyJoinedEvents extends Component {
             <Button className="mb-3"
                 onClick={this.clearFilter}
                 color="outline-secondary">
-                Clear Filter
+                {dispense("clearFilter")}
             </Button>
 
             <div style={{ display: "flex", justifyContent: "space-between" }} className="mb-3">
@@ -340,9 +341,6 @@ class MyJoinedEvents extends Component {
                     displayValue="name"  // Property name to display in the dropdown options
                     ref={this.state.multiselectRefTracker}
                 />
-
-                {/* <Input onChange={this.handleCategoriesChange} value={this.state.categoriesNames}
-                    placeholder="Enter categories separated by comma" style={{ maxWidth: "25%" }}></Input> */}
             </div>
 
             <FormGroup className="mb-3">
@@ -351,25 +349,25 @@ class MyJoinedEvents extends Component {
                         eventState="WAITING_FOR_START"
                         variant={this.state.eventState === "WAITING_FOR_START" ? "success" : "outline-success"}
                         onClick={this.setEventState}>
-                        Waiting
+                        {dispense("waiting")}
                     </ToggleButton>
                     <ToggleButton
                         eventState="STARTED"
                         variant={this.state.eventState === "STARTED" ? "success" : "outline-success"}
                         onClick={this.setEventState}>
-                        Started
+                        {dispense("started")}
                     </ToggleButton>
                     <ToggleButton
                         eventState="FINISHED"
                         variant={this.state.eventState === "FINISHED" ? "success" : "outline-success"}
                         onClick={this.setEventState}>
-                        Finished
+                        {dispense("finished")}
                     </ToggleButton>
                     <ToggleButton
                         eventState="CLOSED"
                         variant={this.state.eventState == "CLOSED" ? "success" : "outline-success"}
                         onClick={this.setEventState}>
-                        Closed
+                        {dispense("closed")}
                     </ToggleButton>
                 </div>
             </FormGroup>
@@ -380,25 +378,25 @@ class MyJoinedEvents extends Component {
                         sortField="name"
                         variant={this.state.sortField === "name" ? "success" : "outline-success"}
                         onClick={this.setSortField}>
-                        Name
+                        {dispense("title")}
                     </ToggleButton>
                     <ToggleButton
                         sortField="description"
                         variant={this.state.sortField === "description" ? "success" : "outline-success"}
                         onClick={this.setSortField}>
-                        Description
+                        {dispense("description")}
                     </ToggleButton>
                     <ToggleButton
                         sortField="startInstant"
                         variant={this.state.sortField === "startInstant" ? "success" : "outline-success"}
                         onClick={this.setSortField}>
-                        Start Instant
+                        {dispense("startInstant")}
                     </ToggleButton>
                     <ToggleButton
                         sortField="endInstant"
                         variant={this.state.sortField === "endInstant" ? "success" : "outline-success"}
                         onClick={this.setSortField}>
-                        End Instant
+                        {dispense("endInstant")}
                     </ToggleButton>
                 </div>
 
@@ -407,13 +405,13 @@ class MyJoinedEvents extends Component {
                         sortOrder="ASC"
                         variant={this.state.sortOrder === "ASC" ? "success" : "outline-success"}
                         onClick={this.setSortOrder}>
-                        Ascend
+                        {dispense("ascend")}
                     </ToggleButton>
                     <ToggleButton
                         sortOrder="DESC"
                         variant={this.state.sortOrder === "DESC" ? "success" : "outline-success"}
                         onClick={this.setSortOrder}>
-                        Descend
+                        {dispense("descend")}
                     </ToggleButton>
                 </div>
             </FormGroup>
@@ -426,13 +424,13 @@ class MyJoinedEvents extends Component {
                             filterField="name"
                             variant={this.state.filterField === "name" ? "success" : "outline-success"}
                             onClick={this.setFilterValue}>
-                            Name
+                            {dispense("title")}
                         </ToggleButton>
                         <ToggleButton
                             filterField="description"
                             variant={this.state.filterField === "description" ? "success" : "outline-success"}
                             onClick={this.setFilterValue}>
-                            Description
+                            {dispense("description")}
                         </ToggleButton>
                     </div>
 
@@ -441,18 +439,18 @@ class MyJoinedEvents extends Component {
                             filterOperation="LIKE"
                             variant={this.state.filterOperation === "LIKE" ? "success" : "outline-success"}
                             onClick={this.setFilterOperation}>
-                            Like
+                            {dispense("like")}
                         </ToggleButton>
                         <ToggleButton
                             filterOperation="EQUAL"
                             variant={this.state.filterOperation === "EQUAL" ? "success" : "outline-success"}
                             onClick={this.setFilterOperation}>
-                            Equal
+                            {dispense("equal")}
                         </ToggleButton>
                     </div>
 
                     <Input onChange={this.handleChange} name="filterValue" value={this.state.filterValue} className="ms-3"
-                        placeholder="Letters" style={{ maxWidth: "25%", display: "inline" }}></Input>
+                        placeholder={dispense("letters")} style={{ maxWidth: "25%", display: "inline" }}></Input>
                 </div>
             </FormGroup>
         </Form >

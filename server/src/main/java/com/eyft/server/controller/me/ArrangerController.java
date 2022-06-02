@@ -151,7 +151,7 @@ public class ArrangerController {
         }
 
         event.getPhotos().remove(photo);
-        if(event.getPreview().equals(photo)){
+        if(event.getPreview() != null && event.getPreview().equals(photo)){
             event.setPreview(null);
         }
 

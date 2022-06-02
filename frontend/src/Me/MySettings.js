@@ -7,6 +7,7 @@ import ErrorNotifier from '../Handler/ErrorNotifier';
 import Constants from '../Const/Constants';
 import ErrorHandler from '../Handler/ErrorHandler';
 import classnames from 'classnames';
+import { dispense } from "Localization/Dispenser";
 
 let thisObj
 
@@ -159,8 +160,8 @@ class MySettings extends Component {
         const { user: user } = this.state;
 
         let arrangerBecoming = user.arrangerRoleRequested
-            ? <div class="badge bg-success">Waiting for an approval of arranger becoming</div>
-            : Constants.isArrangerOrHigher(localStorage.getItem("role")) ? "" : <Button color="success" style={{minWidth:"100%"}} onClick={this.becomeArranger}>Become Arranger</Button>
+            ? <div class="badge bg-success">{dispense("waitingForAnApprovalOfArrangerBecoming")}</div>
+            : Constants.isArrangerOrHigher(localStorage.getItem("role")) ? "" : <Button color="success" style={{minWidth:"100%"}} onClick={this.becomeArranger}>{dispense("becomeArranger")}</Button>
 
         return <div>
             <AppNavbar />
@@ -172,7 +173,7 @@ class MySettings extends Component {
                                 className={classnames({ active: this.state.activeTab === '1' })}
                                 onClick={() => { this.toggle('1'); }}
                             >
-                                Personal Data 📗
+                                {dispense("personalData")} 📗
                             </NavLink>
                         </NavItem>
                         <NavItem>
@@ -180,7 +181,7 @@ class MySettings extends Component {
                                 className={classnames({ active: this.state.activeTab === '2' })}
                                 onClick={() => { this.toggle('2'); }}
                             >
-                                Password ⚙️
+                                {dispense("password")} ⚙️
                             </NavLink>
                         </NavItem>
                         <NavItem>
@@ -188,7 +189,7 @@ class MySettings extends Component {
                                 className={classnames({ active: this.state.activeTab === '3' })}
                                 onClick={() => { this.toggle('3'); }}
                             >
-                                Arranger 🎍
+                                {dispense("arranger")} 🎍
                             </NavLink>
                         </NavItem>
                     </Nav>
@@ -196,44 +197,44 @@ class MySettings extends Component {
                         <TabPane tabId="1">
                             <Form onSubmit={this.handleSubmit}>
                                 <FormGroup className="mt-3">
-                                    <Label for="email">Email</Label>
+                                    <Label for="email">{dispense("email")}</Label>
                                     <Input type="text" name="email" id="email" value={user.email || ''}
                                         onChange={this.handleChange} autoComplete="email" />
                                 </FormGroup>
                                 <FormGroup className="mt-3">
-                                    <Label for="firstName">First Name</Label>
+                                    <Label for="firstName">{dispense("firstName")}</Label>
                                     <Input type="text" name="firstName" id="firstName" value={user.firstName || ''}
                                         onChange={this.handleChange} autoComplete="firstName" />
                                 </FormGroup>
                                 <FormGroup className="mt-3">
-                                    <Label for="lastName">Last Name</Label>
+                                    <Label for="lastName">{dispense("lastName")}</Label>
                                     <Input type="text" name="lastName" id="lastName" value={user.lastName || ''}
                                         onChange={this.handleChange} autoComplete="lastName" />
                                 </FormGroup>
                                 <FormGroup className="mt-4">
-                                    <Button color="success" style={{minWidth:"100%"}} type="submit">Save</Button>{' '}
+                                    <Button color="success" style={{minWidth:"100%"}} type="submit">{dispense("save")}</Button>{' '}
                                 </FormGroup>
                             </Form>
                         </TabPane>
                         <TabPane tabId="2">
                             <Form onSubmit={this.handlePasswordSubmit}>
                                 <FormGroup className="mt-3">
-                                    <Label for="oldPassword">Old Password</Label>
+                                    <Label for="oldPassword">{dispense("oldPassword")}</Label>
                                     <Input type="password" name="oldPassword" id="oldPassword" value={this.state.oldPassword || ''}
                                         onChange={this.handlePasswordChange} autoComplete="oldPassword" />
                                 </FormGroup>
                                 <FormGroup className="mt-3">
-                                    <Label for="newPassword">New password</Label>
+                                    <Label for="newPassword">{dispense("newPassword")}</Label>
                                     <Input type="password" name="newPassword" id="newPassword" value={this.state.newPassword || ''}
                                         onChange={this.handlePasswordChange} autoComplete="newPassword" />
                                 </FormGroup>
                                 <FormGroup className="mt-3">
-                                    <Label for="newPasswordRepeat">New Password Repeat</Label>
+                                    <Label for="newPasswordRepeat">{dispense("newPasswordRepeat")}</Label>
                                     <Input type="password" name="newPasswordRepeat" id="newPasswordRepeat" value={this.state.newPasswordRepeat || ''}
                                         onChange={this.handlePasswordChange} autoComplete="newPasswordRepeat" />
                                 </FormGroup>
                                 <FormGroup className="mt-4">
-                                    <Button color="success" style={{minWidth:"100%"}} type="submit">Change password</Button>{' '}
+                                    <Button color="success" style={{minWidth:"100%"}} type="submit">{dispense("changePassword")}</Button>{' '}
                                 </FormGroup>
                             </Form>
                         </TabPane>
